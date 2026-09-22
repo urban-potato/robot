@@ -1,0 +1,3 @@
+[submodule "firmware/xiaozhi-esp32"]
+	path = firmware/xiaozhi-esp32
+	url = https://github.com/urban-potato/xiaozhi-esp32.git
