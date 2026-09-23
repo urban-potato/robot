@@ -1,6 +1,11 @@
 class ConversationMemory:
-    def __init__(self):
-        self.messages: list[dict[str, str]] = []
+    def __init__(self, system_prompt: str):
+        self.messages: list[dict[str, str]] = [
+            {
+                "role": "system",
+                "content": system_prompt,
+            }
+        ]
 
     def add_user_message(self, message: str):
         self.messages.append({

@@ -4,10 +4,12 @@ from http.server import HTTPServer
 from ai.factory import create_ai_provider
 from http_server import RobotServer
 from memory import ConversationMemory
+from system.prompt import build_system_prompt
 
 
 ai_provider = create_ai_provider()
-memory = ConversationMemory()
+system_prompt = build_system_prompt()
+memory = ConversationMemory(system_prompt)
 
 handler = partial(RobotServer, ai_provider, memory)
 

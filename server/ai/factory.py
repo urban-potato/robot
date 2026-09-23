@@ -1,4 +1,4 @@
-from config import (
+from .config import (
     AI_PROVIDER,
     AIProviderType,
     OLLAMA_MODEL,
