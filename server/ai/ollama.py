@@ -3,20 +3,16 @@ import urllib.request
 
 from .provider import AIProvider
 
+
 class OllamaProvider(AIProvider):
     def __init__(self, ollama_url: str, model: str):
         self.ollama_url = ollama_url
         self.model = model
 
-    def chat(self, message: str) -> str:
+    def chat(self, messages: list[dict[str, str]]) -> str:
         request_data = {
             "model": self.model,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": message,
-                }
-            ],
+            "messages": messages,
             "think": False,
             "stream": False,
         }

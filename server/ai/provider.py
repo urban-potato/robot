@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
+
 class AIProvider(ABC):
     @abstractmethod
-    def chat(self, message: str) -> str:
+    def chat(self, messages: list[dict[str, str]]) -> str:
         pass

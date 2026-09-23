@@ -2,11 +2,19 @@ import json
 from http.server import BaseHTTPRequestHandler
 
 from ai.provider import AIProvider
+from memory import ConversationMemory
 
 
 class RobotServer(BaseHTTPRequestHandler):
-    def __init__(self, ai_provider: AIProvider, *args, **kwargs):
+    def __init__(
+        self,
+        ai_provider: AIProvider,
+        memory: ConversationMemory,
+        *args,
+        **kwargs,
+    ):
         self.ai_provider = ai_provider
+        self.memory = memory
         super().__init__(*args, **kwargs)
 
     def do_POST(self):
@@ -26,7 +34,9 @@ class RobotServer(BaseHTTPRequestHandler):
             return
 
         try:
-            answer = self.ai_provider.chat(user_message)
+            self.memory.add_user_message(user_message)
+            answer = self.ai_provider.chat(self.memory.get_messages())
+            self.memory.add_assistant_message(answer)
 
         except Exception:
             self.send_error(500, "AI provider error")
