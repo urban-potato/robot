@@ -66,16 +66,6 @@ class OllamaProvider(AIProvider):
         if not message.tool_calls:
             return message.content
 
-        tool_call = message.tool_calls[0]
-
-        tool_name = tool_call.function.name
-        tool_arguments = tool_call.function.arguments
-
-        tool_result = execute_tool(
-            tool_name,
-            tool_arguments,
-        )
-
         memory_message = message.to_memory_message()
 
         memory.add_assistant_message(
@@ -83,10 +73,16 @@ class OllamaProvider(AIProvider):
             tool_calls=memory_message.tool_calls,
         )
 
-        memory.add_tool_message(
-            tool_name=tool_name,
-            content=tool_result,
-        )
+        for tool_call in message.tool_calls:
+            tool_result = execute_tool(
+                tool_call.function.name,
+                tool_call.function.arguments,
+            )
+
+            memory.add_tool_message(
+                tool_name=tool_call.function.name,
+                content=tool_result,
+            )
 
         response_data = self._request(
             memory.get_messages()
