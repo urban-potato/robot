@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any
+
+from memory import ConversationMemory
 
 
 class AIProvider(ABC):
     @abstractmethod
-    def chat(self, messages: list[dict[str, Any]]) -> str:
+    def chat(
+        self,
+        memory: ConversationMemory,
+    ) -> str:
         pass

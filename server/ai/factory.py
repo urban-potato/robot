@@ -5,7 +5,7 @@ from .config import (
     OLLAMA_URL,
 )
 
-from .ollama import OllamaProvider
+from .ollama.provider import OllamaProvider
 from .provider import AIProvider
 
 

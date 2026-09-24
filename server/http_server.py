@@ -1,5 +1,6 @@
 import json
 from http.server import BaseHTTPRequestHandler
+from typing import Any
 
 from ai.provider import AIProvider
 from memory import ConversationMemory
@@ -10,12 +11,13 @@ class RobotServer(BaseHTTPRequestHandler):
         self,
         ai_provider: AIProvider,
         memory: ConversationMemory,
-        *args,
-        **kwargs,
+        request: Any,
+        client_address: Any,
+        server: Any,
     ):
         self.ai_provider = ai_provider
         self.memory = memory
-        super().__init__(*args, **kwargs)
+        super().__init__(request=request, client_address=client_address, server=server)
 
     def do_POST(self):
         if self.path != "/chat":
@@ -35,12 +37,16 @@ class RobotServer(BaseHTTPRequestHandler):
 
         try:
             self.memory.add_user_message(user_message)
-            answer = self.ai_provider.chat(self.memory.get_messages())
+            answer = self.ai_provider.chat(self.memory)
             self.memory.add_assistant_message(answer)
 
         except Exception:
             self.send_error(500, "AI provider error")
             return
+
+        # except Exception as error:
+        #     print(f"AI provider error: {error}")
+        #     raise
 
         response_body = json.dumps(
             {"answer": answer},
