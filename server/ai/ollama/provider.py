@@ -5,7 +5,7 @@ import urllib.request
 from .types import OllamaOptions, OllamaRequest, OllamaRequestMessage, OllamaResponse, OllamaToolResultMessage
 from ..provider import AIProvider
 from memory import ConversationMemory, ConversationMemoryMessage, ConversationMemoryToolMessage
-from tools.executor import execute_tool
+from tools.executor import ToolExecutionError, execute_tool
 from tools.registry import TOOLS
 from .mapper import get_ollama_tools
 
@@ -78,52 +78,17 @@ class OllamaProvider(AIProvider):
             )
 
             for tool_call in message.tool_calls:
-                tool_result = execute_tool(
-                    tool_call.function.name,
-                    tool_call.function.arguments,
-                )
+                tool_name = tool_call.function.name
+
+                try:
+                    tool_result = execute_tool(
+                        tool_name,
+                        tool_call.function.arguments,
+                    )
+                except ToolExecutionError as error:
+                    tool_result = str(error)
 
                 memory.add_tool_message(
-                    tool_name=tool_call.function.name,
+                    tool_name=tool_name,
                     content=tool_result,
                 )
-
-    # def chat(
-    #     self,
-    #     memory: ConversationMemory,
-    # ) -> str:
-    #     response_data = self._request(memory.get_messages())
-    #     message = response_data.message
-
-    #     if not message.tool_calls:
-    #         return message.content
-
-    #     memory_message = message.to_memory_message()
-
-    #     memory.add_assistant_message(
-    #         memory_message.content,
-    #         tool_calls=memory_message.tool_calls,
-    #     )
-
-    #     for tool_call in message.tool_calls:
-    #         tool_result = execute_tool(
-    #             tool_call.function.name,
-    #             tool_call.function.arguments,
-    #         )
-
-    #         memory.add_tool_message(
-    #             tool_name=tool_call.function.name,
-    #             content=tool_result,
-    #         )
-
-    #     response_data = self._request(
-    #         memory.get_messages()
-    #     )
-
-    #     # print('RESPONSE DATA:\n')
-    #     # print(response_data)
-
-    #     # print('\nMEMORY MESSAGES:\n')
-    #     # print(memory.get_messages())
-
-    #     return response_data.message.content
