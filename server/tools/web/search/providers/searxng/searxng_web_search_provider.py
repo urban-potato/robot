@@ -2,11 +2,11 @@ import json
 import urllib.parse
 import urllib.request
 
-from ...search_provider import SearchProvider
+from ...web_search_provider import WebSearchProvider
 from ...types import SearchResult
 
 
-class SearXNGProvider(SearchProvider):
+class SearXNGWebSearchProvider(WebSearchProvider):
     def __init__(self, url: str):
         self.url = url
 

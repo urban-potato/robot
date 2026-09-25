@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from .types import SearchResult
 
 
-class SearchProvider(ABC):
+class WebSearchProvider(ABC):
     @abstractmethod
     def search(
         self,

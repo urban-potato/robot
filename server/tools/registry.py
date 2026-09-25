@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Callable
 
 from .datetime.time_tools import get_current_time
-from .factory import create_web_search_tool
+from .factory import create_web_page_tool, create_web_search_tool
 
 
 @dataclass
@@ -42,8 +42,27 @@ WEB_SEARCH_TOOL = Tool(
     function=web_search_tool.search,
 )
 
+web_page_tool = create_web_page_tool()
+
+WEB_PAGE_TOOL = Tool(
+    name="web_page_read",
+    description="Read the content of a web page.",
+    parameters={
+        "type": "object",
+        "properties": {
+            "url": {
+                "type": "string",
+                "description": "The URL of the web page to read.",
+            },
+        },
+        "required": ["url"],
+    },
+    function=web_page_tool.read,
+)
+
 
 TOOLS = {
     TIME_TOOL.name: TIME_TOOL,
     WEB_SEARCH_TOOL.name: WEB_SEARCH_TOOL,
+    WEB_PAGE_TOOL.name: WEB_PAGE_TOOL,
 }

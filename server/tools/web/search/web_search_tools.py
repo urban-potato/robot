@@ -1,11 +1,11 @@
-from .search_provider import SearchProvider
+from .web_search_provider import WebSearchProvider
 from .types import SearchResult
 
 
-class WebSearchTool:
+class WebSearchTools:
     def __init__(
         self,
-        provider: SearchProvider,
+        provider: WebSearchProvider,
     ):
         self.provider = provider
 

@@ -14,7 +14,7 @@ from tools.registry import TOOLS
 from .ollama_mapper import get_ollama_tools
 
 
-class OllamaProvider(AIProvider):
+class OllamaAIProvider(AIProvider):
     def __init__(self, ollama_url: str, model: str):
         self.ollama_url = ollama_url
         self.model = model
@@ -72,6 +72,7 @@ class OllamaProvider(AIProvider):
             message = response_data.message
 
             if not message.tool_calls:
+                print(memory.messages)
                 return message.content
 
             memory_message = message.to_memory_message()
