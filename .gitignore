@@ -20,4 +20,7 @@ Thumbs.db
 **/.env
 
 # Robot configuration
-robot_config.py
+assistant_config.py
+
+# SearXNG secrets
+infrastructure/searxng/core-config/settings.yml

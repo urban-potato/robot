@@ -2,8 +2,8 @@ import json
 from http.server import BaseHTTPRequestHandler
 from typing import Any
 
-from ai.provider import AIProvider
-from memory import ConversationMemory
+from ai.ai_provider import AIProvider
+from conversation_memory.conversation_memory import ConversationMemory
 
 
 class RobotServer(BaseHTTPRequestHandler):

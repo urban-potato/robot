@@ -1,12 +1,12 @@
-from .config import (
+from config import (
     AI_PROVIDER,
     AIProviderType,
     OLLAMA_MODEL,
     OLLAMA_URL,
 )
 
-from .ollama.provider import OllamaProvider
-from .provider import AIProvider
+from .providers.ollama.ollama_provider import OllamaProvider
+from .ai_provider import AIProvider
 
 
 def create_ai_provider() -> AIProvider:

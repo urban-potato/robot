@@ -18,7 +18,7 @@ class UserConfig:
 
 
 @dataclass
-class RobotConfig:
+class AssistantConfig:
     name: str
     identity: str
     user: UserConfig

@@ -3,8 +3,8 @@ from http.server import HTTPServer
 
 from ai.factory import create_ai_provider
 from http_server import RobotServer
-from memory import ConversationMemory
-from system.prompt import build_system_prompt
+from assistant.system_prompt import build_system_prompt
+from conversation_memory.conversation_memory import ConversationMemory
 
 
 ai_provider = create_ai_provider()

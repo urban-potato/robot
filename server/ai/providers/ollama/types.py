@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Sequence
 
-from memory import ConversationMemoryMessage, ConversationMemoryToolCall, ConversationMemoryToolMessage
+from conversation_memory.conversation_memory import ConversationMemoryMessage, ConversationMemoryToolCall, ConversationMemoryToolMessage
 
 
 @dataclass

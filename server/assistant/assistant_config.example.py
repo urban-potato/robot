@@ -1,7 +1,7 @@
-from .config import RobotConfig, UserConfig
+from .types import AssistantConfig, UserConfig
 
 
-ROBOT_CONFIG = RobotConfig(
+ASSISTANT_CONFIG = AssistantConfig(
     name="Your Robot Name",
     identity="""
 Describe the robot's personality and character using {ROBOT_NAME} and {USER_NAME}.

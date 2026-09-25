@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from memory import ConversationMemory
+from conversation_memory.conversation_memory import ConversationMemory
 
 
 class AIProvider(ABC):

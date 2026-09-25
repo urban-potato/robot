@@ -1,4 +1,4 @@
-from .robot_config import ROBOT_CONFIG
+from .assistant_config import ASSISTANT_CONFIG
 
 
 CAPABILITIES_PROMPT = """
@@ -20,16 +20,16 @@ or is doing any other activity unless the person has told me so.
 
 
 def build_system_prompt() -> str:
-    identity = ROBOT_CONFIG.identity.format(
-        ROBOT_NAME=ROBOT_CONFIG.name,
-        USER_NAME=ROBOT_CONFIG.user.name,
+    identity = ASSISTANT_CONFIG.identity.format(
+        ROBOT_NAME=ASSISTANT_CONFIG.name,
+        USER_NAME=ASSISTANT_CONFIG.user.name,
     )
 
     user_info = (
-            f"The person I am interacting with is named {ROBOT_CONFIG.user.name}.\n"
-            f"I always write the person's name exactly as: {ROBOT_CONFIG.user.name}.\n"
+            f"The person I am interacting with is named {ASSISTANT_CONFIG.user.name}.\n"
+            f"I always write the person's name exactly as: {ASSISTANT_CONFIG.user.name}.\n"
             f"I do not transliterate, translate, partially transliterate, or mix alphabets in the person's name.\n"
-            f"The person's gender is {ROBOT_CONFIG.user.gender}."
+            f"The person's gender is {ASSISTANT_CONFIG.user.gender}."
         )
     
     return "\n\n".join([

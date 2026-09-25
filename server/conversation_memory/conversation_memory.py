@@ -1,23 +1,5 @@
-from dataclasses import dataclass
 
-
-@dataclass
-class ConversationMemoryToolCall:
-    name: str
-    arguments: dict[str, object]
-
-
-@dataclass
-class ConversationMemoryMessage:
-    role: str
-    content: str
-    tool_calls: list[ConversationMemoryToolCall] | None = None
-
-
-@dataclass
-class ConversationMemoryToolMessage:
-    tool_name: str
-    content: str
+from .types import ConversationMemoryMessage, ConversationMemoryToolCall, ConversationMemoryToolMessage
 
 
 class ConversationMemory:
@@ -31,7 +13,7 @@ class ConversationMemory:
             )
         ]
 
-    def add_user_message(self, message: str):
+    def add_user_message(self, message: str) -> None:
         self.messages.append(
             ConversationMemoryMessage(
                 role="user",
@@ -43,7 +25,7 @@ class ConversationMemory:
         self,
         message: str,
         tool_calls: list[ConversationMemoryToolCall] | None = None,
-    ):
+    ) -> None:
         self.messages.append(
             ConversationMemoryMessage(
                 role="assistant",
@@ -56,7 +38,7 @@ class ConversationMemory:
         self,
         tool_name: str,
         content: str,
-    ):
+    ) -> None:
         self.messages.append(
             ConversationMemoryToolMessage(
                 tool_name=tool_name,

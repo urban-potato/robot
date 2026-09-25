@@ -3,11 +3,15 @@ import json
 import urllib.request
 
 from .types import OllamaOptions, OllamaRequest, OllamaRequestMessage, OllamaResponse, OllamaToolResultMessage
-from ..provider import AIProvider
-from memory import ConversationMemory, ConversationMemoryMessage, ConversationMemoryToolMessage
+from ...ai_provider import AIProvider
+from conversation_memory.conversation_memory import ConversationMemory
+from conversation_memory.types import (
+    ConversationMemoryMessage,
+    ConversationMemoryToolMessage,
+)
 from tools.executor import ToolExecutionError, execute_tool
 from tools.registry import TOOLS
-from .mapper import get_ollama_tools
+from .ollama_mapper import get_ollama_tools
 
 
 class OllamaProvider(AIProvider):
