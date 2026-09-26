@@ -7,12 +7,14 @@ from conversation_memory.conversation_memory import ConversationMemoryMessage, C
 
 @dataclass
 class OllamaFunction:
+    index: int
     name: str
     arguments: dict[str, object]
 
 
 @dataclass
 class OllamaToolCall:
+    id: str
     function: OllamaFunction
 
 
@@ -36,7 +38,9 @@ class OllamaRequestMessage:
         if message.tool_calls is not None:
             tool_calls = [
                 OllamaToolCall(
+                    id=tool_call.id,
                     function=OllamaFunction(
+                        index=tool_call.index,
                         name=tool_call.name,
                         arguments=tool_call.arguments,
                     ),
@@ -50,29 +54,6 @@ class OllamaRequestMessage:
             tool_calls=tool_calls,
         )
 
-    # @classmethod
-    # def from_memory_message(
-    #     cls,
-    #     message: ConversationMemoryMessage,
-    # ) -> OllamaRequestMessage:
-    #     tool_calls = None
-
-    #     if message.tool_calls is not None:
-    #         tool_calls = [
-    #             OllamaToolCall(
-    #                 function=OllamaFunction(
-    #                     name=tool_call.name,
-    #                     arguments=tool_call.arguments,
-    #                 ),
-    #             )
-    #             for tool_call in message.tool_calls
-    #         ]
-
-    #     return cls(
-    #         role=message.role,
-    #         content=message.content,
-    #         tool_calls=tool_calls,
-    #     )
 
     @classmethod
     def from_dict(
@@ -84,7 +65,9 @@ class OllamaRequestMessage:
         if "tool_calls" in data:
             tool_calls = [
                 OllamaToolCall(
+                    id=call["id"],
                     function=OllamaFunction(
+                        index=call["function"]["index"],
                         name=call["function"]["name"],
                         arguments=call["function"]["arguments"],
                     ),
@@ -107,7 +90,9 @@ class OllamaRequestMessage:
         if self.tool_calls is not None:
             message["tool_calls"] = [
                 {
+                    "id": tool_call.id,
                     "function": {
+                        "index": tool_call.function.index,
                         "name": tool_call.function.name,
                         "arguments": tool_call.function.arguments,
                     },
@@ -122,6 +107,7 @@ class OllamaRequestMessage:
 class OllamaToolResultMessage:
     content: str
     tool_name: str
+    tool_call_id: str
 
     @classmethod
     def from_memory_message(
@@ -131,6 +117,8 @@ class OllamaToolResultMessage:
         return cls(
             content=message.content,
             tool_name=message.tool_name,
+            tool_call_id=message.tool_call_id,
+            
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -138,6 +126,7 @@ class OllamaToolResultMessage:
             "role": "tool",
             "content": self.content,
             "tool_name": self.tool_name,
+            # "tool_call_id": self.tool_call_id,
         }
 
 
@@ -182,7 +171,9 @@ class OllamaResponseMessage:
         if "tool_calls" in data:
             tool_calls = [
                 OllamaToolCall(
+                    id=call["id"],
                     function=OllamaFunction(
+                        index=call["function"]["index"],
                         name=call["function"]["name"],
                         arguments=call["function"]["arguments"],
                     ),
@@ -202,6 +193,8 @@ class OllamaResponseMessage:
         if self.tool_calls is not None:
             tool_calls = [
                 ConversationMemoryToolCall(
+                    id=tool_call.id,
+                    index=tool_call.function.index,
                     name=tool_call.function.name,
                     arguments=tool_call.function.arguments,
                 )

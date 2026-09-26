@@ -28,7 +28,10 @@ web_search_tool = create_web_search_tool()
 
 WEB_SEARCH_TOOL = Tool(
     name="web_search",
-    description="Search the web for information.",
+    description="""Search the web for information. Use this tool first for current, latest,
+changing, or online information, including requests to find the latest
+version of software. Prefer official sources when the person asks for
+official information.""",
     parameters={
         "type": "object",
         "properties": {
@@ -46,7 +49,10 @@ web_page_tool = create_web_page_tool()
 
 WEB_PAGE_TOOL = Tool(
     name="web_page_read",
-    description="Read the content of a web page.",
+    description="""Read the contents of a specific web page. Use this tool when the person
+provides a specific URL, or when a search result identifies a page whose
+contents must be inspected in detail. Do not use this tool as the first
+choice for a general request to find current information.""",
     parameters={
         "type": "object",
         "properties": {

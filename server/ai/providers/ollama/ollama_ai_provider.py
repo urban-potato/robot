@@ -45,9 +45,28 @@ class OllamaAIProvider(AIProvider):
             ),
         )
 
+        # print('REQUEST:')
+        # print(request_data.to_dict())
+        # print(json.dumps(
+        #     request_data.to_dict(),
+        #     ensure_ascii=False,
+        #     indent=2,
+        # ))
+
+        # request_body = json.dumps(
+        #     request_data.to_dict()
+        # ).encode("utf-8")
+
         request_body = json.dumps(
-            request_data.to_dict()
+            request_data.to_dict(),
+            ensure_ascii=False,
+            indent=2,
         ).encode("utf-8")
+
+        # TODO: temp print
+
+        with open("ollama_request.tmp.json", "wb") as file:
+            file.write(request_body)
 
         request = urllib.request.Request(
             self.ollama_url,
@@ -57,6 +76,8 @@ class OllamaAIProvider(AIProvider):
 
         with urllib.request.urlopen(request) as response:
             data = json.load(response)
+            print('RESPONSE:')
+            print(data)
 
         return OllamaResponse.from_dict(data)
 
@@ -72,7 +93,7 @@ class OllamaAIProvider(AIProvider):
             message = response_data.message
 
             if not message.tool_calls:
-                print(memory.messages)
+                # print(memory.messages)
                 return message.content
 
             memory_message = message.to_memory_message()
@@ -94,6 +115,7 @@ class OllamaAIProvider(AIProvider):
                     tool_result = str(error)
 
                 memory.add_tool_message(
+                    tool_call_id=tool_call.id,
                     tool_name=tool_name,
                     content=tool_result,
                 )

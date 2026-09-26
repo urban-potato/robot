@@ -36,11 +36,13 @@ class ConversationMemory:
 
     def add_tool_message(
         self,
+        tool_call_id: str,
         tool_name: str,
         content: str,
     ) -> None:
         self.messages.append(
             ConversationMemoryToolMessage(
+                tool_call_id=tool_call_id,
                 tool_name=tool_name,
                 content=content,
             )

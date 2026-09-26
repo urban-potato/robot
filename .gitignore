@@ -24,3 +24,6 @@ assistant_config.py
 
 # SearXNG secrets
 infrastructure/searxng/core-config/settings.yml
+
+# Temp files for development
+*.tmp.*
