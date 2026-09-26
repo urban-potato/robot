@@ -26,4 +26,4 @@ assistant_config.py
 infrastructure/searxng/core-config/settings.yml
 
 # Temp files for development
-*.tmp.*
+**/tmp_*.*

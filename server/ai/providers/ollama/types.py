@@ -134,10 +134,11 @@ class OllamaToolResultMessage:
 class OllamaRequest:
     model: str
     messages: Sequence[OllamaRequestMessage | OllamaToolResultMessage]
-    tools: list[dict[str, Any]]
+    tools: list[dict[str, Any]] | None
     think: bool
     stream: bool
     options: OllamaOptions
+    format: str | dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -152,6 +153,7 @@ class OllamaRequest:
             "options": {
                 "temperature": self.options.temperature,
             },
+            "format": self.format,
         }
 
 

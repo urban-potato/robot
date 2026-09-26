@@ -4,6 +4,8 @@ from typing import Any
 
 from ai.ai_provider import AIProvider
 from conversation_memory.conversation_memory import ConversationMemory
+from ai.tool_classifier.tool_classifier import ToolClassifier
+from ai.tool_selection.tool_selector import ToolSelector
 
 
 class RobotServer(BaseHTTPRequestHandler):
@@ -11,14 +13,23 @@ class RobotServer(BaseHTTPRequestHandler):
         self,
         ai_provider: AIProvider,
         memory: ConversationMemory,
+        tool_classifier: ToolClassifier,
+        tool_selector: ToolSelector,
         request: Any,
         client_address: Any,
         server: Any,
     ):
         self.ai_provider = ai_provider
         self.memory = memory
-        super().__init__(request=request, client_address=client_address, server=server)
+        self.tool_classifier = tool_classifier
+        self.tool_selector = tool_selector
 
+        super().__init__(
+            request=request,
+            client_address=client_address,
+            server=server,
+        )
+        
     def do_POST(self):
         if self.path != "/chat":
             self.send_error(404)
@@ -37,7 +48,15 @@ class RobotServer(BaseHTTPRequestHandler):
 
         try:
             self.memory.add_user_message(user_message)
-            answer = self.ai_provider.chat(self.memory)
+
+            selection = self.tool_classifier.classify(user_message)
+            tools = self.tool_selector.select(selection)
+
+            answer = self.ai_provider.chat(
+                self.memory,
+                tools=tools,
+            )
+            
             self.memory.add_assistant_message(answer)
 
         except Exception:

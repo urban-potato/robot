@@ -10,7 +10,7 @@ from conversation_memory.types import (
     ConversationMemoryToolMessage,
 )
 from tools.executor import ToolExecutionError, execute_tool
-from tools.registry import TOOLS
+from tools.registry import Tool
 from .ollama_mapper import get_ollama_tools
 
 
@@ -24,6 +24,7 @@ class OllamaAIProvider(AIProvider):
         messages: Sequence[
             ConversationMemoryMessage | ConversationMemoryToolMessage
         ],
+        tools: Sequence[Tool] | None = None,
     ) -> OllamaResponse:
         request_messages = [
             (
@@ -37,7 +38,7 @@ class OllamaAIProvider(AIProvider):
         request_data = OllamaRequest(
             model=self.model,
             messages=request_messages,
-            tools=get_ollama_tools(list(TOOLS.values())),
+            tools=get_ollama_tools(list(tools)) if tools is not None else None,
             think=False,
             stream=False,
             options=OllamaOptions(
@@ -65,7 +66,7 @@ class OllamaAIProvider(AIProvider):
 
         # TODO: temp print
 
-        with open("ollama_request.tmp.json", "wb") as file:
+        with open("tmp_ollama_request.json", "wb") as file:
             file.write(request_body)
 
         request = urllib.request.Request(
@@ -84,10 +85,12 @@ class OllamaAIProvider(AIProvider):
     def chat(
         self,
         memory: ConversationMemory,
+        tools: Sequence[Tool] | None = None,
     ) -> str:
         while True:
             response_data = self._request(
-                memory.get_messages()
+                memory.get_messages(),
+                tools=tools,
             )
 
             message = response_data.message
