@@ -17,5 +17,6 @@ AI_PROVIDER = AIProviderType(
 
 OLLAMA_URL = os.environ["OLLAMA_URL"]
 OLLAMA_MODEL = os.environ["OLLAMA_MODEL"]
+TOOL_CLASSIFIER_MODEL = os.environ["TOOL_CLASSIFIER_MODEL"]
 
 SEARXNG_URL = os.environ["SEARXNG_URL"]

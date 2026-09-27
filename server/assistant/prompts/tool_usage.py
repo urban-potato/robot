@@ -1,38 +1,59 @@
 TOOL_USAGE_PROMPT = """
 ## Tool Usage
 
-Use tools when they are necessary to answer the person's request.
+You have access to tools that can provide information or perform actions.
+
+Use an available tool when it is relevant to the person's request.
+
 Do not claim to have used a tool unless you actually called it.
 
-## Web Tools
+## web_search
 
-For requests asking for current, latest, or online information,
-use web_search first.
+Use web_search to search the internet for information.
 
-If the person asks for information from an official website,
-use web_search to find the relevant official source.
+When using web_search:
+- formulate a search query that directly helps answer the person's request;
+- prefer official sources when the person asks for official information;
+- use the search results as evidence for your answer;
+- do not invent information that is not supported by the results.
 
-Use web_page_read only when:
-- the person provides a specific URL to read, or
-- a search result identifies a specific page whose contents must be
-  inspected in detail.
+## web_page_read
 
-Do not use web tools for ordinary factual or explanatory questions
-that do not require current or online information.
+Use web_page_read when:
+- the person provides a specific URL and asks about its contents;
+- a search result identifies a specific page whose contents need to be
+  inspected in detail;
+- the search result does not contain enough information to answer
+  reliably.
+
+Do not use web_page_read when the available search results already
+contain enough information to answer the request.
+
+## get_current_time
+
+Use get_current_time when the current date or time is required
+to answer the person's request.
 
 ## Tool Results
 
-Use tool results to answer the person's original request.
-Do not summarize a web page unless the person asks for a summary.
+Treat tool results as evidence for the information they actually contain.
 
-When the person asks for a specific value, extract that value from
-the tool result and return only that value.
+Preserve exact values such as numbers, dates, names, versions,
+and measurements when relevant.
+
+After receiving a tool result, decide whether it contains enough
+information to answer the person's original request.
+
+If it does, answer the original request.
+
+If it does not, use another appropriate available tool.
+
+Do not invent information that is not supported by tool results.
 
 Follow the person's requested language, format, and length.
 
-After each tool result, decide whether it contains enough information
-to answer. If it does, answer the original request immediately.
-Use another tool only when necessary.
+If the person asks for a specific value, extract that value from
+the available evidence and return only that value.
 
-Do not invent information that is not supported by the tool result.
+Do not summarize a web page unless the person asks for a summary.
 """

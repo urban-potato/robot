@@ -1,11 +1,13 @@
 import json
 from http.server import BaseHTTPRequestHandler
+import time
 from typing import Any
 
 from ai.ai_provider import AIProvider
 from conversation_memory.conversation_memory import ConversationMemory
 from ai.tool_classifier.tool_classifier import ToolClassifier
 from ai.tool_selection.tool_selector import ToolSelector
+# from tools.registry import TOOLS
 
 
 class RobotServer(BaseHTTPRequestHandler):
@@ -49,14 +51,28 @@ class RobotServer(BaseHTTPRequestHandler):
         try:
             self.memory.add_user_message(user_message)
 
+            # CLASSIFIER
+            classifier_start = time.perf_counter()
             selection = self.tool_classifier.classify(user_message)
+            classifier_elapsed = time.perf_counter() - classifier_start
+            # print(f"|||||||||| Tool selection: {selection}")
+            print(
+                f"Tool classifier: {classifier_elapsed:.3f} s "
+                f"({selection})"
+            )
+            selector_start = time.perf_counter()
             tools = self.tool_selector.select(selection)
+            selector_elapsed = time.perf_counter() - selector_start
+            print(f"Tool selector: {selector_elapsed:.6f} s")
+
+            # NO CLASSIFIER
+            # tools = list(TOOLS.values())
 
             answer = self.ai_provider.chat(
                 self.memory,
                 tools=tools,
             )
-            
+
             self.memory.add_assistant_message(answer)
 
         except Exception:
