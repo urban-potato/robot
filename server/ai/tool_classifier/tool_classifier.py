@@ -155,7 +155,7 @@ needs_web: true
 User request: "Explain how a call stack works."
 needs_web: false
 
-User request: "What is the weather tomorrow in Krasnoyarsk?"
+User request: "What is the weather tomorrow in London?"
 needs_web: true
 
 User request: "How much does the dollar cost right now?"
