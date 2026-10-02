@@ -13,66 +13,107 @@ class Tool:
     function: Callable[..., str]
 
 
-TIME_TOOL = Tool(
+DATETIME_TOOL = Tool(
     name="get_datetime",
     description="""Get the current date and time.
 
-Use this tool when:
-- the person asks for the current time or date;
-- the person asks what day it is;
-- the person asks for the current date or time in a specific city;
-- the current date or time is needed to answer the request.
+Use this tool ONLY when the person asks for:
+- the current time;
+- today's date;
+- the current day of the week;
+- the current date and time;
+- the current date or time in a specific city.
 
-If a city is provided, use the city and country code extracted from
-the person's request. If no city is provided, get the date and time
-in the person's configured timezone.""",
+Do NOT use this tool for:
+- weather;
+- prices;
+- exchange rates;
+- current versions;
+- current releases;
+- current events;
+- news;
+- availability;
+- other information merely because it contains words such as
+  "current", "now", "today", or "tomorrow".
+
+If a city is explicitly provided, use that city.
+If a country is explicitly provided, use its ISO alpha-2 code.
+
+If no city is provided, use the person's configured city
+and country code.""",
     parameters={
         "type": "object",
         "properties": {
             "city": {
                 "type": "string",
-                "description": "The city whose current date and time is requested.",
+                "description": (
+                    "The city whose current date and time is requested."
+                ),
             },
             "country_code": {
                 "type": "string",
-                "description": "The ISO 3166-1 alpha-2 country code of the city.",
+                "description": (
+                    "The ISO 3166-1 alpha-2 country code of the city."
+                ),
             },
         },
         "required": [],
+        "additionalProperties": False,
     },
     function=get_datetime_str,
 )
+
 
 web_search_tool = create_web_search_tool()
 
 WEB_SEARCH_TOOL = Tool(
     name="web_search",
-    description="""Search the internet for information that cannot be answered
-reliably without up-to-date or online sources.
+    description="""Search the internet for information that cannot be
+answered reliably without current or online information.
 
 Use this tool for:
 - current or latest information;
 - recent or changing information;
-- information the person explicitly asks you to search for;
-- information that must be obtained from a website or online source.
+- current versions or releases;
+- current prices or exchange rates;
+- weather or current conditions;
+- availability;
+- information explicitly requested to be searched,
+  checked, looked up, found, or verified online;
+- recent news;
+- information that must be obtained from an online source.
 
-Do not use this tool for casual conversation, personal questions,
-definitions, explanations, or other requests that can be answered
-without an online search.
+Do NOT use this tool for:
+- casual conversation;
+- personal questions;
+- definitions;
+- stable explanations;
+- reasoning;
+- programming help;
+- programming concepts;
+- stable general knowledge.
 
-Return a search query that directly matches the person's request.""",
+A technical topic does not by itself require web search.
+
+Return a concise search query that directly matches
+the person's request.""",
     parameters={
         "type": "object",
         "properties": {
             "query": {
                 "type": "string",
-                "description": "A concise search query directly related to the person's request.",
+                "description": (
+                    "A concise search query directly related to "
+                    "the person's request."
+                ),
             },
         },
         "required": ["query"],
+        "additionalProperties": False,
     },
     function=web_search_tool.search,
 )
+
 
 web_page_tool = create_web_page_tool()
 
@@ -82,11 +123,12 @@ WEB_PAGE_TOOL = Tool(
 
 Use this tool when:
 - the person provides a URL and asks about its contents;
-- a specific page found through web search must be inspected;
-- the information needed is contained in the page itself and is not
-available in the search result.
+- a specific page must be inspected;
+- the requested information is contained in that page.
 
-Do not use this tool for general web searches.""",
+Preserve the exact URL.
+
+Do NOT use this tool for general web searches.""",
     parameters={
         "type": "object",
         "properties": {
@@ -96,13 +138,14 @@ Do not use this tool for general web searches.""",
             },
         },
         "required": ["url"],
+        "additionalProperties": False,
     },
     function=web_page_tool.read,
 )
 
 
 TOOLS = {
-    TIME_TOOL.name: TIME_TOOL,
+    DATETIME_TOOL.name: DATETIME_TOOL,
     WEB_SEARCH_TOOL.name: WEB_SEARCH_TOOL,
     WEB_PAGE_TOOL.name: WEB_PAGE_TOOL,
 }

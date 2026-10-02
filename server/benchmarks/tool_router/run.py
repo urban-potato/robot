@@ -13,8 +13,9 @@ from dotenv import load_dotenv
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
 from ai.tool_router.types import ToolRoute
 from assistant.assistant_config import ASSISTANT_CONFIG
-from .types import OllamaTiming, ResultRow
+
 from .scenarios import TEST_GROUPS, ToolRouteTest
+from .types import OllamaTiming, ResultRow
 
 
 load_dotenv()
@@ -486,3 +487,4 @@ def run_tests() -> None:
 
 if __name__ == "__main__":
     run_tests()
+    

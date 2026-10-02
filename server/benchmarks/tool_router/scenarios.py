@@ -414,43 +414,64 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Который сейчас час?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Сколько сейчас времени?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Какая сейчас дата?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Какое сегодня число?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Какой сегодня день недели?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Какая сейчас дата и время?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
                 "Что сейчас за дата?",
                 "get_datetime",
-                {},
+                {
+                    "city": USER_CITY,
+                    "country_code": USER_COUNTRY_CODE,
+                },
                 False,
             ),
             ToolRouteTest(
@@ -746,28 +767,28 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
-                (USER_CITY, USER_COUNTRY_CODE),
+                (USER_CITY,),
             ),
             ToolRouteTest(
                 "Какая погода сегодня?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY, USER_COUNTRY_CODE),
+                (USER_CITY,),
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY, USER_COUNTRY_CODE),
+                (USER_CITY,),
             ),
             ToolRouteTest(
                 "Какая температура сейчас?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY, USER_COUNTRY_CODE),
+                (USER_CITY,),
             ),
             ToolRouteTest(
                 "Какая погода завтра в Лондоне?",
