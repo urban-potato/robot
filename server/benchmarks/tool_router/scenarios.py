@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from assistant.assistant_config import ASSISTANT_CONFIG
+from .config import USER_CITY, USER_COUNTRY_CODE, USER_CITY_VARIANTS
 
 
 @dataclass(frozen=True)
@@ -10,11 +10,10 @@ class ToolRouteTest:
     expected_tool: str | None
     expected_arguments: dict[str, Any]
     expected_clarification: bool
-    expected_query_contains: tuple[str, ...] = ()
-
-
-USER_CITY = ASSISTANT_CONFIG.user.city
-USER_COUNTRY_CODE = ASSISTANT_CONFIG.user.country_code
+    expected_query_requirements: tuple[
+        tuple[str, ...],
+        ...,
+    ] = ()
 
 
 TEST_GROUPS = [
@@ -767,49 +766,112 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
-                (USER_CITY,),
+                (
+                    (
+                        "weather",
+                        "погода",
+                        "forecast",
+                        "прогноз",
+                    ),
+                    USER_CITY_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Какая погода сегодня?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY,),
+                (
+                    (
+                        "weather",
+                        "погода",
+                        "forecast",
+                        "прогноз",
+                    ),
+                    USER_CITY_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY,),
+                (
+                    (
+                        "rain",
+                        "дождь",
+                        "rainfall",
+                    ),
+                    USER_CITY_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Какая температура сейчас?",
                 "web_search",
                 {},
                 False,
-                (USER_CITY,),
+                (
+                    (
+                        "temperature",
+                        "температура",
+                        "degrees",
+                        "градус",
+                    ),
+                    USER_CITY_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Какая погода завтра в Лондоне?",
                 "web_search",
                 {},
                 False,
-                ("Лондон",),
+                (
+                    (
+                        "weather",
+                        "погода",
+                        "forecast",
+                        "прогноз",
+                    ),
+                    (
+                        "London",
+                        "Лондон",
+                    ),
+                ),
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь в Токио?",
                 "web_search",
                 {},
                 False,
-                ("Токио",),
+                (
+                    (
+                        "rain",
+                        "дождь",
+                        "rainfall",
+                    ),
+                    (
+                        "Tokyo",
+                        "Токио",
+                    ),
+                ),
             ),
             ToolRouteTest(
                 "Какая температура сейчас в Лондоне?",
                 "web_search",
                 {},
                 False,
-                ("Лондон",),
+                (
+                    (
+                        "temperature",
+                        "температура",
+                        "degrees",
+                        "градус",
+                    ),
+                    (
+                        "London",
+                        "Лондон",
+                    ),
+                ),
             ),
         ],
     ),
@@ -906,21 +968,48 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
-                ("Лондон",),
+                (
+                    (
+                        "weather",
+                        "погода",
+                        "forecast",
+                        "прогноз",
+                    ),
+                    (
+                        "London",
+                        "Лондон",
+                    ),
+                ),
             ),
             ToolRouteTest(
                 "Проверь погоду на завтра в Токио.",
                 "web_search",
                 {},
                 False,
-                ("Токио",),
+                (
+                    (
+                        "weather",
+                        "погода",
+                        "forecast",
+                        "прогноз",
+                    ),
+                    (
+                        "Tokyo",
+                        "Токио",
+                    ),
+                ),
             ),
             ToolRouteTest(
                 "Проверь, доступен ли сейчас GitHub.",
                 "web_search",
                 {},
                 False,
-                ("GitHub",),
+                (
+                    (
+                        "GitHub",
+                        "гитхаб",
+                    ),
+                ),
             ),
             ToolRouteTest(
                 "Поищи информацию о рекурсии.",
