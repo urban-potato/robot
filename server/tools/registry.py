@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from .datetime.time_tools import get_current_time
+from .datetime.datetime_tools import get_datetime_str
 from .factory import create_web_page_tool, create_web_search_tool
 
 
@@ -14,16 +14,33 @@ class Tool:
 
 
 TIME_TOOL = Tool(
-    name="get_current_time",
-    description="""Get the current date and time when the person asks for
-the current time or date, or when the current time or date is needed
-to answer the request.""",
+    name="get_datetime",
+    description="""Get the current date and time.
+
+Use this tool when:
+- the person asks for the current time or date;
+- the person asks what day it is;
+- the person asks for the current date or time in a specific city;
+- the current date or time is needed to answer the request.
+
+If a city is provided, use the city and country code extracted from
+the person's request. If no city is provided, get the date and time
+in the person's configured timezone.""",
     parameters={
         "type": "object",
-        "properties": {},
+        "properties": {
+            "city": {
+                "type": "string",
+                "description": "The city whose current date and time is requested.",
+            },
+            "country_code": {
+                "type": "string",
+                "description": "The ISO 3166-1 alpha-2 country code of the city.",
+            },
+        },
         "required": [],
     },
-    function=get_current_time,
+    function=get_datetime_str,
 )
 
 web_search_tool = create_web_search_tool()

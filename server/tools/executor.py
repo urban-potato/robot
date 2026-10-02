@@ -21,3 +21,4 @@ def execute_tool(name: str, arguments: dict[str, Any]) -> str:
         raise ToolExecutionError(
             f"Tool '{name}' failed: {error}"
         ) from error
+    

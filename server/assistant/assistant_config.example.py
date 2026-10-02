@@ -9,6 +9,8 @@ Describe the robot's personality and character using {ROBOT_NAME} and {USER_NAME
     user=UserConfig(
         name="Your name",
         gender="female or male",
+        city="Your city",
+        country_code="Your country code",
         timezone="Your/Timezone",
     ),
 )

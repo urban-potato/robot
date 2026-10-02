@@ -48,6 +48,27 @@ class ConversationMemory:
             )
         )
 
+    def add_tool_call(
+        self,
+        tool_call_id: str,
+        tool_name: str,
+        arguments: dict[str, object],
+    ) -> None:
+        self.messages.append(
+            ConversationMemoryMessage(
+                role="assistant",
+                content="",
+                tool_calls=[
+                    ConversationMemoryToolCall(
+                        id=tool_call_id,
+                        index=0,
+                        name=tool_name,
+                        arguments=arguments,
+                    )
+                ],
+            )
+        )
+
     def get_messages(
         self,
     ) -> list[ConversationMemoryMessage | ConversationMemoryToolMessage]:

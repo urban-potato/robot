@@ -6,6 +6,8 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 class UserConfig:
     name: str
     gender: str
+    city: str
+    country_code: str
     timezone: str = "UTC"
 
     def __post_init__(self):

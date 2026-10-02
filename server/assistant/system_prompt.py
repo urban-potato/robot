@@ -1,9 +1,7 @@
-
 from .assistant_config import ASSISTANT_CONFIG
 
 from .prompts.communication import COMMUNICATION_PROMPT
 from .prompts.grounding import GROUNDING_PROMPT
-from .prompts.tool_usage import TOOL_USAGE_PROMPT
 
 
 def build_system_prompt() -> str:
@@ -20,6 +18,9 @@ def build_system_prompt() -> str:
         f"I do not transliterate, translate, partially transliterate, "
         f"or mix alphabets in the person's name.\n"
         f"The person's gender is {ASSISTANT_CONFIG.user.gender}.\n"
+        f"The person's city is {ASSISTANT_CONFIG.user.city}.\n"
+        f"The person's country code is "
+        f"{ASSISTANT_CONFIG.user.country_code}.\n"
         f"The person's timezone is {ASSISTANT_CONFIG.user.timezone}."
     )
 
@@ -28,5 +29,4 @@ def build_system_prompt() -> str:
         user_info,
         COMMUNICATION_PROMPT,
         GROUNDING_PROMPT,
-        TOOL_USAGE_PROMPT,
     ])
