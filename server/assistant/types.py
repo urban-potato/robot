@@ -8,7 +8,7 @@ class UserConfig:
     gender: str
     city: str
     country_code: str
-    timezone: str = "UTC"
+    timezone: str
 
     def __post_init__(self):
         try:

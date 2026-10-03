@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from .config import USER_CITY, USER_COUNTRY_CODE, USER_CITY_VARIANTS
+from .config import ANDROID_VARIANTS, FLUTTER_VARIANTS, LONDON_CITY_VARIANTS, PYTHON_VARIANTS, TOKYO_CITY_VARIANTS, UBUNTU_VARIANTS, USER_CITY_VARIANTS
 
 
 @dataclass(frozen=True)
@@ -103,27 +103,72 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
+                (
+                    PYTHON_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая сейчас последняя версия пайтона?",
+                "web_search",
+                {},
+                False,
+                (
+                    PYTHON_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая последняя версия Python?",
                 "web_search",
                 {},
                 False,
+                (
+                    PYTHON_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая сейчас версия Flutter?",
                 "web_search",
                 {},
                 False,
+                (
+                    FLUTTER_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая последняя версия Flutter?",
                 "web_search",
                 {},
                 False,
+                (
+                    FLUTTER_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая последняя версия флаттер?",
+                "web_search",
+                {},
+                False,
+                (
+                    FLUTTER_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая последняя версия Флаттера?",
+                "web_search",
+                {},
+                False,
+                (
+                    FLUTTER_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая сейчас версия ESP-IDF?",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Какая сейчас версия esp idf?",
                 "web_search",
                 {},
                 False,
@@ -139,24 +184,63 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
+                (
+                    UBUNTU_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая последняя версия Ubuntu?",
                 "web_search",
                 {},
                 False,
+                (
+                    UBUNTU_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая последняя версия Убунту?",
+                "web_search",
+                {},
+                False,
+                (
+                    UBUNTU_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая сейчас версия Android?",
                 "web_search",
                 {},
                 False,
+                (
+                    ANDROID_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая сейчас последняя версия андроид?",
+                "web_search",
+                {},
+                False,
+                (
+                    ANDROID_VARIANTS,
+                )
             ),
             ToolRouteTest(
                 "Какая последняя версия Android?",
                 "web_search",
                 {},
                 False,
+                (
+                    ANDROID_VARIANTS,
+                )
+            ),
+            ToolRouteTest(
+                "Какая последняя версия андроида?",
+                "web_search",
+                {},
+                False,
+                (
+                    ANDROID_VARIANTS,
+                )
             ),
         ],
     ),
@@ -171,7 +255,19 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
+                "Как работает пайтон?",
+                None,
+                {},
+                False,
+            ),
+            ToolRouteTest(
                 "Как работает Flutter?",
+                None,
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Объясни, как работает Флаттер?",
                 None,
                 {},
                 False,
@@ -309,6 +405,12 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
+                "Поищи информацию о питоне, который язык программирования.",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
                 "Поищи информацию о Flutter.",
                 "web_search",
                 {},
@@ -346,6 +448,12 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Найди документацию Flutter.",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Найди документацию флаттера.",
                 "web_search",
                 {},
                 False,
@@ -413,64 +521,91 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Который сейчас час?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Который час?",
+                "get_datetime",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Сколько времени?",
+                "get_datetime",
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Сколько сейчас времени?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Какая сейчас дата?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Какое сегодня число?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Какой сегодня день недели?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Какой сегодня день?",
+                "get_datetime",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Сегодня выходной?",
+                "get_datetime",
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Какая сейчас дата и время?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
                 False,
             ),
             ToolRouteTest(
                 "Что сейчас за дата?",
                 "get_datetime",
-                {
-                    "city": USER_CITY,
-                    "country_code": USER_COUNTRY_CODE,
-                },
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Какой сейчас месяц?",
+                "get_datetime",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Напомни, какой месяц.",
+                "get_datetime",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Какой сейчас год?",
+                "get_datetime",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Напомни какой год",
+                "get_datetime",
+                {},
                 False,
             ),
             ToolRouteTest(
@@ -480,7 +615,25 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
+                "Сколько времени в Лондоне?",
+                "get_datetime",
+                {"city": "London"},
+                False,
+            ),
+            ToolRouteTest(
                 "Который сейчас час в Лондоне?",
+                "get_datetime",
+                {"city": "London"},
+                False,
+            ),
+            ToolRouteTest(
+                "Который час в Лондоне?",
+                "get_datetime",
+                {"city": "London"},
+                False,
+            ),
+            ToolRouteTest(
+                "Время в Лондоне?",
                 "get_datetime",
                 {"city": "London"},
                 False,
@@ -516,7 +669,7 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
-                "Сколько сейчас времени в Лондоне, Великобритания?",
+                "Сколько сейчас времени в Лондоне Великобритания?",
                 "get_datetime",
                 {
                     "city": "London",
@@ -525,7 +678,7 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
-                "Сколько сейчас времени в Токио, Япония?",
+                "Сколько сейчас времени в Токио Япония?",
                 "get_datetime",
                 {
                     "city": "Tokyo",
@@ -684,6 +837,12 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
+                "Какая последняя версия си плюс плюс?",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
                 "Какая сейчас версия GCC?",
                 "web_search",
                 {},
@@ -714,7 +873,19 @@ TEST_GROUPS = [
                 False,
             ),
             ToolRouteTest(
+                "Какая сейчас версия гит?",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
                 "Какая последняя версия Git?",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Какая последняя версия гита?",
                 "web_search",
                 {},
                 False,
@@ -751,6 +922,12 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Узнай последние изменения в Python.",
+                "web_search",
+                {},
+                False,
+            ),
+            ToolRouteTest(
+                "Что нового во флаттере?",
                 "web_search",
                 {},
                 False,
@@ -832,10 +1009,7 @@ TEST_GROUPS = [
                         "forecast",
                         "прогноз",
                     ),
-                    (
-                        "London",
-                        "Лондон",
-                    ),
+                    LONDON_CITY_VARIANTS,
                 ),
             ),
             ToolRouteTest(
@@ -849,10 +1023,7 @@ TEST_GROUPS = [
                         "дождь",
                         "rainfall",
                     ),
-                    (
-                        "Tokyo",
-                        "Токио",
-                    ),
+                    TOKYO_CITY_VARIANTS,
                 ),
             ),
             ToolRouteTest(
@@ -867,10 +1038,7 @@ TEST_GROUPS = [
                         "degrees",
                         "градус",
                     ),
-                    (
-                        "London",
-                        "Лондон",
-                    ),
+                    LONDON_CITY_VARIANTS,
                 ),
             ),
         ],
@@ -896,24 +1064,36 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
+                (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Что нового в Flutter?",
                 "web_search",
                 {},
                 False,
+                (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Python?",
                 "web_search",
                 {},
                 False,
+                (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Flutter?",
                 "web_search",
                 {},
                 False,
+                (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Что нового в ESP-IDF?",
@@ -975,10 +1155,7 @@ TEST_GROUPS = [
                         "forecast",
                         "прогноз",
                     ),
-                    (
-                        "London",
-                        "Лондон",
-                    ),
+                    LONDON_CITY_VARIANTS,
                 ),
             ),
             ToolRouteTest(
@@ -993,10 +1170,7 @@ TEST_GROUPS = [
                         "forecast",
                         "прогноз",
                     ),
-                    (
-                        "Tokyo",
-                        "Токио",
-                    ),
+                    TOKYO_CITY_VARIANTS,
                 ),
             ),
             ToolRouteTest(
@@ -1028,6 +1202,9 @@ TEST_GROUPS = [
                 "web_search",
                 {},
                 False,
+                (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Поищи, что такое указатели в C++.",

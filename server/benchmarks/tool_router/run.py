@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
 from ai.tool_router.types import ToolRoute
-from assistant.assistant_config import ASSISTANT_CONFIG
+from .config import USER_CONFIG
 
 from .scenarios import TEST_GROUPS, ToolRouteTest
 from .types import OllamaTiming, ResultRow
@@ -32,7 +32,12 @@ OLLAMA_MODEL = os.environ["OLLAMA_MODEL"]
 router = SemanticToolRouter(
     ollama_url=OLLAMA_URL,
     model=OLLAMA_MODEL,
+    user_config=USER_CONFIG,
 )
+
+def contains_word_stem(text: str, stem: str) -> bool:
+    pattern = rf"\b{re.escape(stem.casefold())}\w*"
+    return re.search(pattern, text.casefold()) is not None
 
 
 def parse_ollama_timing(
@@ -59,24 +64,6 @@ def parse_ollama_timing(
         "prompt_eval": timing.get("prompt_eval_duration"),
         "eval": timing.get("eval_duration"),
     }
-
-
-def resolve_expected_query_parts(
-    parts: tuple[str, ...],
-) -> tuple[str, ...]:
-    city = ASSISTANT_CONFIG.user.city
-    country_code = ASSISTANT_CONFIG.user.country_code
-
-    return tuple(
-        part.replace(
-            "__USER_CITY__",
-            city,
-        ).replace(
-            "__USER_COUNTRY_CODE__",
-            country_code,
-        )
-        for part in parts
-    )
 
 
 def validate_structure(
@@ -114,6 +101,44 @@ def validate_structure(
     return errors
 
 
+def validate_web_search_query(
+    test: ToolRouteTest,
+    result: ToolRoute,
+) -> list[str]:
+    errors: list[str] = []
+
+    query = result.arguments.get("query")
+
+    if not isinstance(query, str):
+        errors.append(
+            "web_search query must be a string"
+        )
+        return errors
+
+    if not query.strip():
+        errors.append(
+            "web_search query must not be empty"
+        )
+        return errors
+
+ 
+
+    for alternatives in test.expected_query_requirements:
+        if any(
+            contains_word_stem(query, alternative)
+            for alternative in alternatives
+        ):
+            continue
+
+        errors.append(
+            "web_search query does not contain "
+            "any expected value from "
+            f"{alternatives!r}: {query!r}"
+        )
+
+    return errors
+
+
 def validate_tool(
     test: ToolRouteTest,
     result: ToolRoute,
@@ -134,34 +159,12 @@ def validate_tool(
         )
 
     if test.expected_tool == "web_search":
-        query = result.arguments.get("query")
-
-        if not isinstance(query, str):
-            errors.append(
-                "web_search query must be a string"
-            )
-            return errors
-
-        if not query.strip():
-            errors.append(
-                "web_search query must not be empty"
-            )
-            return errors
-
-        expected_query_parts = (
-            resolve_expected_query_parts(
-                test.expected_query_contains
+        errors.extend(
+            validate_web_search_query(
+                test,
+                result,
             )
         )
-
-        query_lower = query.casefold()
-
-        for part in expected_query_parts:
-            if part.casefold() not in query_lower:
-                errors.append(
-                    "web_search query does not contain "
-                    f"expected value {part!r}: {query!r}"
-                )
 
         return errors
 
@@ -229,6 +232,80 @@ def collect_timing_values(
     ]
 
     return timing_values
+
+
+def print_group_results(
+    results: list[ResultRow],
+) -> None:
+    group_results: dict[str, tuple[int, int]] = {}
+
+    for row in results:
+        group = row["group"]
+        correct, total = group_results.get(
+            group,
+            (0, 0),
+        )
+
+        total += 1
+
+        if row["route_correct"] and not row["error"]:
+            correct += 1
+
+        group_results[group] = (
+            correct,
+            total,
+        )
+
+    total_correct = sum(
+        correct
+        for correct, _ in group_results.values()
+    )
+    total_tests = sum(
+        total
+        for _, total in group_results.values()
+    )
+
+    print("\n" + "=" * 70)
+    print("RESULTS BY GROUP")
+    print("=" * 70)
+
+    print(
+        f"{'Группа':<40}"
+        f"{'Правильных':>12}"
+        f"{'Всего':>8}"
+        f"{'Точность':>12}"
+    )
+
+    print("-" * 70)
+
+    for group, (correct, total) in group_results.items():
+        accuracy = (
+            correct / total * 100
+            if total
+            else 0.0
+        )
+
+        print(
+            f"{group:<40}"
+            f"{correct:>12}"
+            f"{total:>8}"
+            f"{accuracy:>11.1f}%"
+        )
+
+    total_accuracy = (
+        total_correct / total_tests * 100
+        if total_tests
+        else 0.0
+    )
+
+    print("-" * 70)
+
+    print(
+        f"{'ИТОГО':<40}"
+        f"{total_correct:>12}"
+        f"{total_tests:>8}"
+        f"{total_accuracy:>11.1f}%"
+    )
 
 
 def run_tests() -> None:
@@ -480,6 +557,8 @@ def run_tests() -> None:
                 f"{mean(values):.3f} s"
             )
 
+    print_group_results(results)
+
     print(
         f"\nCSV saved to: {CSV_PATH}"
     )
@@ -487,4 +566,3 @@ def run_tests() -> None:
 
 if __name__ == "__main__":
     run_tests()
-    

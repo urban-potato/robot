@@ -22,7 +22,7 @@ Use this tool ONLY when the person asks for:
 - today's date;
 - the current day of the week;
 - the current date and time;
-- the current date or time in a specific city.
+- the current date or time in a specific location.
 
 Do NOT use this tool for:
 - weather;
@@ -36,24 +36,44 @@ Do NOT use this tool for:
 - other information merely because it contains words such as
   "current", "now", "today", or "tomorrow".
 
-If a city is explicitly provided, use that city.
-If a country is explicitly provided, use its ISO alpha-2 code.
+Location parameters:
+- Pass all location information explicitly provided by the person.
+- If a city is provided, pass it as `city`.
+- If a country is provided, convert it to its ISO 3166-1 alpha-2
+  country code and pass it as `country_code`.
+- If a timezone is provided, pass it as `timezone`.
+- Do not omit a provided location parameter because another location
+  parameter is also present.
+- Do not invent location parameters that were not provided by the person.
 
-If no city is provided, use the person's configured city
-and country code.""",
+Examples:
+- "What time is it in London?" -> city="London"
+- "What time is it in London UK?" -> city="London", country_code="GB"
+- "What time is it in Japan?" -> country_code="JP"
+- "What time is it in Europe London?" -> timezone="Europe/London"
+- "What time is it?" -> no location parameters""",
     parameters={
         "type": "object",
         "properties": {
             "city": {
                 "type": "string",
                 "description": (
-                    "The city whose current date and time is requested."
+                    "The city whose current date and time is requested "
+                    "when a city is explicitly provided."
                 ),
             },
             "country_code": {
                 "type": "string",
                 "description": (
-                    "The ISO 3166-1 alpha-2 country code of the city."
+                    "The ISO 3166-1 alpha-2 country code of the country "
+                    "when a country is explicitly provided."
+                ),
+            },
+            "timezone": {
+                "type": "string",
+                "description": (
+                    "The IANA timezone name when a timezone is explicitly "
+                    "provided, for example 'Europe/London' or 'Asia/Tokyo'. "
                 ),
             },
         },

@@ -61,13 +61,13 @@ and asks about the contents of that URL.
 
 Examples:
 
-"Что написано на https://example.com?"
+"What's written on https://example.com?"
 -> web_page_read
 
-"Прочитай https://example.com"
+"Read https://example.com"
 -> web_page_read
 
-"Что находится на странице https://example.com?"
+"What's on the page https://example.com?"
 -> web_page_read
 
 Preserve the exact URL.
@@ -89,25 +89,74 @@ Use get_datetime ONLY when the requested information is:
 - current time;
 - today's date;
 - current day of the week;
+- current month;
+- current year;
 - current date and time;
-- current date or time in a specified city.
+- current date or time in a specified city, country or timezone.
 
 Examples:
 
-"Который сейчас час?"
+"What time is it right now?"
 -> get_datetime
+arguments: {}
 
-"Сколько сейчас времени?"
+"What time is it?"
 -> get_datetime
+arguments: {}
 
-"Какая сегодня дата?"
+"What time is it now?"
 -> get_datetime
+arguments: {}
 
-"Какой сегодня день недели?"
+"What's today's date?"
 -> get_datetime
+arguments: {}
 
-"Сколько сейчас времени в Лондоне?"
+"What day of the week is it today?"
 -> get_datetime
+arguments: {}
+
+"What month is it?"
+-> get_datetime
+arguments: {}
+
+"What year is it?"
+-> get_datetime
+arguments: {}
+
+"What month is it now?"
+-> get_datetime
+arguments: {}
+
+"What year is it now?"
+-> get_datetime
+arguments: {}
+
+"What time is it in London?"
+-> get_datetime
+arguments: {
+    "city": "London"
+}
+
+"What time is it in Toulouse France?"
+-> get_datetime
+arguments: {
+    "city": "Toulouse",
+    "country_code": "FR"
+}
+
+"What time is it in Japan?"
+-> get_datetime
+arguments: {
+    "country_code": "JP"
+}
+
+
+"What time is it in Europe Moscow?"
+-> get_datetime
+arguments: {
+    "timezone": "Europe/Moscow"
+}
 
 Do NOT use get_datetime for:
 - weather;
@@ -122,32 +171,35 @@ Do NOT use get_datetime for:
 
 Examples:
 
-"Какая сейчас погода?"
+"What's the weather like right now?"
 -> web_search
 
-"Сколько сейчас стоит доллар?"
+"How much is the dollar worth?"
 -> web_search
 
-"Какая сейчас версия Python?"
+"What is the current Python version?"
 -> web_search
 
-"Какие сейчас новости?"
+"What are today's news?"
 -> web_search
 
-If a city is explicitly provided:
-- use that city;
-- if a country is explicitly provided, use its ISO alpha-2 code.
+Location handling:
+
+- If a city is explicitly provided, pass it as "city".
+- If a country is explicitly provided, convert it to its 
+ISO 3166-1 alpha-2 code and pass it as "country_code".
+- If a timezone is explicitly provided, or a timezone is given 
+in a recognizable non-standard form, normalize it to its 
+standard IANA timezone name and pass it as "timezone".
+- If no location is explicitly provided, return empty arguments.
 
 For common city names, use their standard English city name:
 
 "Лондон" -> "London"
+"ロンドン" -> "London"
 "Токио" -> "Tokyo"
 
-Do not invent a different city.
-
-If no city is specified:
-- use the configured city;
-- use the configured country code.
+Do not guess or invent a city, country or timezone.
 
 ==================================================
 3. WEB SEARCH
@@ -175,43 +227,79 @@ Use web_search for:
 
 Examples:
 
-"Какая сейчас последняя версия Python?"
+"What is the latest Python version?"
 -> web_search
 
-"Какая последняя версия Flutter?"
+"What is the latest Flutter version?"
 -> web_search
 
-"Какая сейчас версия ESP-IDF?"
+"What is the current ESP-IDF version?"
 -> web_search
 
-"Что нового в Python?"
+"What's new in Python?"
 -> web_search
 
-"Узнай последние изменения в Python."
+"Find out about the latest changes in Python."
 -> web_search
 
-"Поищи информацию о TCP."
+"Search for information about TCP."
 -> web_search
 
-"Найди документацию Python."
+"Find the Python documentation."
 -> web_search
 
-"Какая погода завтра?"
+"What's the weather tomorrow?"
+-> web_search
+Use the configured city from User Context in the query.
+
+"How much is the dollar worth right now?"
 -> web_search
 
-"Сколько сейчас стоит доллар?"
--> web_search
-
-"Проверь, доступен ли сейчас GitHub."
+"Check if GitHub is currently available."
 -> web_search
 
 IMPORTANT:
 
-Words such as "сейчас", "сегодня", or "последний" do not
+Words such as "now", "today", or "latest" do not
 automatically mean web_search.
 
 The requested information itself must require current
 or external information.
+
+LOCATION HANDLING:
+
+If the request requires location-specific information and the user
+does not explicitly provide a location, use the configured location
+from User Context.
+
+Examples:
+
+"What's the weather tomorrow?"
+-> web_search
+Use the configured city from User Context in the query.
+
+"Are there any events tomorrow?"
+-> web_search
+Use the configured city from User Context in the query.
+
+If the user explicitly provides a city, country, or other location,
+use that location instead of the configured location.
+
+Examples:
+
+"What's the weather tomorrow in London?"
+-> web_search
+Use "London" in the query.
+
+"Are there any events tomorrow in Tokyo?"
+-> web_search
+Use "Tokyo" in the query.
+
+The explicitly provided location always has priority over the
+configured location from User Context.
+
+Do NOT ask for clarification merely because the user did not
+provide a location if a configured location is available.
 
 ==================================================
 4. CLARIFICATION
@@ -222,13 +310,13 @@ but an essential target is missing.
 
 Examples:
 
-"Узнай расписание на сегодня."
+"Find today's schedule."
 -> clarification
 
-"Проверь, доступен ли сейчас этот сервис."
+"Check if this service is currently available."
 -> clarification
 
-"Проверь, сколько стоит."
+"Check how much it costs."
 -> clarification
 
 In these cases the required target is missing.
@@ -275,70 +363,70 @@ Technical terms do NOT change this rule.
 
 Examples:
 
-"Что такое рекурсия?"
+"What is recursion?"
 -> NO TOOL
 
-"Как работает рекурсия?"
+"How does recursion work?"
 -> NO TOOL
 
-"Что такое TCP?"
+"What is TCP?"
 -> NO TOOL
 
-"Как работает TCP?"
+"How does TCP work?"
 -> NO TOOL
 
-"Что такое Python?"
+"What is Python?"
 -> NO TOOL
 
-"Как работает Python?"
+"How does Python work?"
 -> NO TOOL
 
-"Что такое Flutter?"
+"What is Flutter?"
 -> NO TOOL
 
-"Как работает Flutter?"
+"How does Flutter work?"
 -> NO TOOL
 
-"Что такое ESP-IDF?"
+"What is ESP-IDF?"
 -> NO TOOL
 
-"Что такое указатель в C++?"
+"What is a pointer in C++?"
 -> NO TOOL
 
-"Чем указатель отличается от ссылки?"
+"What's the difference between a pointer and a reference?"
 -> NO TOOL
 
-"Что такое процесс?"
+"What is a process?"
 -> NO TOOL
 
-"Чем процесс отличается от потока?"
+"What's the difference between a process and a thread?"
 -> NO TOOL
 
-"Как работает сборщик мусора?"
+"How does garbage collection work?"
 -> NO TOOL
 
-"Напиши функцию сортировки."
+"Write a sorting function."
 -> NO TOOL
 
-"Почему возникает эта ошибка?"
+"Why does this error occur?"
 -> NO TOOL
 
-"Какой у тебя любимый цвет?"
+"What is your favorite color?"
 -> NO TOOL
 
-"Как дела?"
+"How are you?"
 -> NO TOOL
 
-"Расскажи о себе."
+"Tell me about yourself."
 -> NO TOOL
 
-"Расскажи про Python."
+"Tell me about Python."
 -> NO TOOL
 
-"Расскажи про Flutter."
+"Tell me about Flutter."
 -> NO TOOL
 
-"Расскажи про ESP32."
+"Tell me about ESP32."
 -> NO TOOL
 
 ==================================================
@@ -349,105 +437,105 @@ These pairs are especially important.
 
 Stable explanation:
 
-"Что такое Python?"
+"What is Python?"
 -> NO TOOL
 
 Current information:
 
-"Какая сейчас версия Python?"
+"What is the current Python version?"
 -> web_search
 
 Stable explanation:
 
-"Как работает Python?"
+"How does Python work?"
 -> NO TOOL
 
 Current information:
 
-"Какая последняя версия Python?"
+"What is the latest Python version?"
 -> web_search
 
 Stable explanation:
 
-"Что такое Flutter?"
+"What is Flutter?"
 -> NO TOOL
 
 Current information:
 
-"Какая сейчас версия Flutter?"
+"What is the current Flutter version?"
 -> web_search
 
 Stable explanation:
 
-"Что такое ESP-IDF?"
+"What is ESP-IDF?"
 -> NO TOOL
 
 Current information:
 
-"Какая сейчас версия ESP-IDF?"
+"What is the current ESP-IDF version?"
 -> web_search
 
 Stable explanation:
 
-"Как работает Git?"
+"How does Git work?"
 -> NO TOOL
 
 Current information:
 
-"Какая сейчас версия Git?"
+"What is the current Git version?"
 -> web_search
 
 Stable explanation:
 
-"Что такое TCP?"
+"What is TCP?"
 -> NO TOOL
 
 Explicit search:
 
-"Поищи информацию о TCP."
+"Search for information about TCP."
 -> web_search
 
 Stable topic:
 
-"Расскажи про Python."
+"Tell me about Python."
 -> NO TOOL
 
 Recent information:
 
-"Что нового в Python?"
+"What's new in Python?"
 -> web_search
 
 Stable topic:
 
-"Расскажи про Flutter."
+"Tell me about Flutter."
 -> NO TOOL
 
 Recent information:
 
-"Что нового в Flutter?"
+"What's new in Flutter?"
 -> web_search
 
 ==================================================
 IMPORTANT NEGATIVE RULE
 ==================================================
 
-Do NOT select web_search because a topic is technical.
+Do NOT select web_search just because a topic is technical.
 
 For example:
 
-"Что такое Python?"
+"What is Python?"
 is NOT a search request.
 
-"Как работает TCP?"
+"How does TCP work?"
 is NOT a search request.
 
-"Что такое Flutter?"
+"What is Flutter?"
 is NOT a search request.
 
-"Что такое ESP32?"
+"What is ESP32?"
 is NOT a search request.
 
-"Что такое класс в C++?"
+"What is a class in C++?"
 is NOT a search request.
 
 Only the information requirement determines the tool.
@@ -472,29 +560,70 @@ The query must:
 
 For a location-specific request:
 
-"Какая погода завтра?"
--> include the configured city in the query.
+- If the user explicitly provides a location, use that location.
+- If the user does not provide a location, use the configured
+  location from User Context.
+- Include the resolved location in the web_search query.
+- Do NOT put city, country, country_code or timezone into web_search arguments.
 
-"Какая погода завтра в Лондоне?"
--> include "Лондон" in the query.
+Examples:
 
-Do NOT put city or country_code into web_search arguments.
+"What's the weather tomorrow?"
+-> use the configured city from User Context.
+
+"What's the weather tomorrow in London?"
+-> use "London" in the query.
+
+"Find events happening tomorrow."
+-> use the configured city from User Context.
+
+"Find events happening tomorrow in Tokyo."
+-> use "Tokyo" in the query.
 
 ==================================================
 GET DATETIME ARGUMENTS
 ==================================================
 
-For get_datetime return:
+For get_datetime, return only location information
+explicitly provided by the user.
 
-{
-    "city": "...",
-    "country_code": "..."
-}
+The arguments for get_datetime may contain only:
+- "city"
+- "country_code"
+- "timezone"
 
-If the city is explicitly provided, use it.
+- If a city is explicitly provided, pass it as "city".
+- If a country is explicitly provided, convert it to its 
+ISO 3166-1 alpha-2 code and pass it as "country_code".
+- If a timezone is explicitly provided, or a timezone is given 
+in a recognizable non-standard form, normalize it to its 
+standard IANA timezone name and pass it as "timezone".
+- If no location is explicitly provided, return empty arguments.
 
-If no city is provided, use the configured city and
-configured country code from User Context.
+Do NOT use the configured location from User Context
+as get_datetime arguments.
+
+The get_datetime tool handles the configured user timezone
+when no location is provided.
+
+TIMEZONE NORMALIZATION:
+
+If the user provides a timezone in a non-standard form,
+normalize it to the standard IANA timezone name.
+
+Examples:
+
+"Europe/London" -> "Europe/London"
+"Europe London" -> "Europe/London"
+"London Europe" -> "Europe/London"
+"Europe Moscow" -> "Europe/Moscow"
+"Moscow Europe" -> "Europe/Moscow"
+
+Do not pass the user's original non-standard timezone wording
+when the standard IANA timezone name can be determined.
+
+Do not guess a timezone if the user's intended timezone
+cannot be determined reliably.
 
 ==================================================
 OUTPUT

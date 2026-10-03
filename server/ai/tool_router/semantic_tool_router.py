@@ -3,6 +3,7 @@ import urllib.request
 from typing import Any, cast
 
 from assistant.assistant_config import ASSISTANT_CONFIG
+from assistant.types import UserConfig
 
 from .system_prompt import build_system_prompt
 from .types import ToolRoute
@@ -63,21 +64,16 @@ TOOL_ROUTE_SCHEMA: dict[str, Any] = {
 }
 
 
-CITY_ALIASES: dict[str, str] = {
-    "лондон": "London",
-    "токио": "Tokyo",
-}
-
-
 class SemanticToolRouter:
     def __init__(
         self,
         ollama_url: str,
         model: str,
+        user_config: UserConfig | None = None,
     ):
         self.ollama_url = ollama_url
         self.model = model
-        self.system_prompt = build_system_prompt()
+        self.system_prompt = build_system_prompt(user_config)
 
     def route(
         self,
@@ -296,11 +292,6 @@ class SemanticToolRouter:
                 normalized_country_code = (
                     ASSISTANT_CONFIG.user.country_code
                 )
-
-            normalized_city = CITY_ALIASES.get(
-                normalized_city.casefold(),
-                normalized_city,
-            )
 
             return {
                 "city": normalized_city,
