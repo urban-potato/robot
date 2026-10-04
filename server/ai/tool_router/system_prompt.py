@@ -5,31 +5,40 @@ from .router_prompt import ROUTER_PROMPT
 
 
 def build_system_prompt(
-        user_config: UserConfig | None = None,
+    user_config: UserConfig | None = None,
 ) -> str:
-    user_config = (
+    config = (
         user_config
         if user_config is not None
         else ASSISTANT_CONFIG.user
     )
 
     user_context = f"""
-## User Context
+==================================================
+USER CONTEXT
+==================================================
 
-Configured city: {user_config.city}
-Configured country code: {user_config.country_code}
-Configured timezone: {user_config.timezone}
+Configured city: {config.city}
+Configured country code: {config.country_code}
+Configured timezone: {config.timezone}
 
-These values are authoritative.
+Use User Context only for location-specific WEB SEARCH.
 
-For a location-specific web search without an explicit city:
-- include the configured city in the search query.
+For WEB SEARCH:
+- if the user mentions a location, use that location;
+- otherwise use the configured city from User Context.
 
-The explicitly requested city, country and timezone always have priority over 
-the configured city, country code and timezone.
+For GET DATETIME:
+- use only location information mentioned by the user;
+- if the user mentions no location, return arguments: {{}};
+- never copy the configured location into get_datetime arguments.
+
+A location mentioned by the user always has priority over User Context.
 """
 
-    return "\n\n".join([
-        ROUTER_PROMPT,
-        user_context,
-    ])
+    return "\n\n".join(
+        [
+            user_context,
+            ROUTER_PROMPT,
+        ]
+    )

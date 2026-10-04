@@ -14,7 +14,8 @@ from ai.tool_router.semantic_tool_router import SemanticToolRouter
 from ai.tool_router.types import ToolRoute
 from .config import USER_CONFIG
 
-from .scenarios import TEST_GROUPS, ToolRouteTest
+from .scenarios_ru import TEST_GROUPS, ToolRouteTest
+# from .scenarios_eng import TEST_GROUPS, ToolRouteTest
 from .types import OllamaTiming, ResultRow
 
 

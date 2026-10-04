@@ -2,9 +2,6 @@ import json
 import urllib.request
 from typing import Any, cast
 
-from assistant.assistant_config import ASSISTANT_CONFIG
-from assistant.types import UserConfig
-
 from .system_prompt import build_system_prompt
 from .types import ToolRoute
 
@@ -44,6 +41,9 @@ TOOL_ROUTE_SCHEMA: dict[str, Any] = {
                 "country_code": {
                     "type": "string",
                 },
+                "timezone": {
+                    "type": "string",
+                },
             },
             "additionalProperties": False,
         },
@@ -69,7 +69,7 @@ class SemanticToolRouter:
         self,
         ollama_url: str,
         model: str,
-        user_config: UserConfig | None = None,
+        user_config: Any | None = None,
     ):
         self.ollama_url = ollama_url
         self.model = model
@@ -204,11 +204,6 @@ class SemanticToolRouter:
                 "or null."
             )
 
-        normalized_arguments = self._normalize_arguments(
-            tool,
-            arguments,
-        )
-
         if needs_clarification:
             return ToolRoute(
                 tool=None,
@@ -216,6 +211,11 @@ class SemanticToolRouter:
                 needs_clarification=True,
                 clarification_question=clarification_question,
             )
+
+        normalized_arguments = self._normalize_arguments(
+            tool,
+            arguments,
+        )
 
         return ToolRoute(
             tool=tool,
@@ -257,48 +257,63 @@ class SemanticToolRouter:
             }
 
         if tool == "get_datetime":
-            city = arguments.get("city")
-            country_code = arguments.get("country_code")
-
-            if city is not None and not isinstance(city, str):
-                raise ValueError(
-                    "get_datetime city must be a string."
-                )
-
-            if (
-                country_code is not None
-                and not isinstance(country_code, str)
-            ):
-                raise ValueError(
-                    "get_datetime country_code must be a string."
-                )
-
-            normalized_city = (
-                city.strip()
-                if isinstance(city, str)
-                else ""
+            return self._normalize_datetime_arguments(
+                arguments
             )
-
-            normalized_country_code = (
-                country_code.strip().upper()
-                if isinstance(country_code, str)
-                else ""
-            )
-
-            if not normalized_city:
-                normalized_city = ASSISTANT_CONFIG.user.city
-
-            if not normalized_country_code:
-                normalized_country_code = (
-                    ASSISTANT_CONFIG.user.country_code
-                )
-
-            return {
-                "city": normalized_city,
-                "country_code": normalized_country_code,
-            }
 
         raise ValueError(
             f"Unsupported router tool: {tool!r}"
         )
+
+    def _normalize_datetime_arguments(
+        self,
+        arguments: dict[str, Any],
+    ) -> dict[str, str]:
+        city = arguments.get("city")
+        country_code = arguments.get("country_code")
+        timezone = arguments.get("timezone")
+
+        if city is not None and not isinstance(city, str):
+            raise ValueError(
+                "get_datetime city must be a string."
+            )
+
+        if (
+            country_code is not None
+            and not isinstance(country_code, str)
+        ):
+            raise ValueError(
+                "get_datetime country_code must be a string."
+            )
+
+        if timezone is not None and not isinstance(timezone, str):
+            raise ValueError(
+                "get_datetime timezone must be a string."
+            )
+
+        normalized_arguments: dict[str, str] = {}
+
+        if isinstance(city, str):
+            normalized_city = city.strip()
+
+            if normalized_city:
+                normalized_arguments["city"] = normalized_city
+
+        if isinstance(country_code, str):
+            normalized_country_code = country_code.strip().upper()
+
+            if normalized_country_code:
+                normalized_arguments["country_code"] = (
+                    normalized_country_code
+                )
+
+        if isinstance(timezone, str):
+            normalized_timezone = timezone.strip()
+
+            if normalized_timezone:
+                normalized_arguments["timezone"] = (
+                    normalized_timezone
+                )
+
+        return normalized_arguments
     

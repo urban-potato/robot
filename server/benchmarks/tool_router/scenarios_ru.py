@@ -1022,6 +1022,8 @@ TEST_GROUPS = [
                         "rain",
                         "дождь",
                         "rainfall",
+                        "weather",
+                        "погода",
                     ),
                     TOKYO_CITY_VARIANTS,
                 ),
@@ -1037,6 +1039,8 @@ TEST_GROUPS = [
                         "температура",
                         "degrees",
                         "градус",
+                        "weather",
+                        "погода",
                     ),
                     LONDON_CITY_VARIANTS,
                 ),
@@ -1111,7 +1115,7 @@ TEST_GROUPS = [
     ),
 
     (
-        "Clarification",
+        "Clarification or not",
         [
             ToolRouteTest(
                 "Узнай расписание на сегодня.",
