@@ -27,12 +27,12 @@ RESULTS_DIR = BENCHMARK_DIR / "results"
 CSV_PATH = RESULTS_DIR / "results.csv"
 
 OLLAMA_URL = os.environ["OLLAMA_URL"]
-OLLAMA_MODEL = os.environ["OLLAMA_MODEL"]
+TOOL_CLASSIFIER_MODEL = os.environ["TOOL_CLASSIFIER_MODEL"]
 
 
 router = SemanticToolRouter(
     ollama_url=OLLAMA_URL,
-    model=OLLAMA_MODEL,
+    model=TOOL_CLASSIFIER_MODEL,
     user_config=USER_CONFIG,
 )
 
@@ -159,7 +159,7 @@ def validate_tool(
             f"got {result.needs_clarification!r}"
         )
 
-    if test.expected_tool == "web_search":
+    if result.tool == "web_search":
         errors.extend(
             validate_web_search_query(
                 test,
