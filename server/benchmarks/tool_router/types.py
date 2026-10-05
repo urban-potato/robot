@@ -30,12 +30,21 @@ class ResultRow(TypedDict):
     validation_errors: str
     error: str
 
+
 @dataclass(frozen=True)
 class ToolRouteTest:
     message: str
     expected_tool: RouterTool
-    expected_arguments: dict[str, Any] = field(default_factory=_empty_arguments)
+
+    # Arguments whose exact values must match.
+    expected_arguments: dict[str, Any] = field(
+        default_factory=_empty_arguments,
+    )
+
+    # Each tuple contains alternative words or phrases. The query must
+    # contain at least one alternative from every tuple.
     expected_query_requirements: tuple[
         tuple[str, ...],
         ...,
     ] = ()
+    

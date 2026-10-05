@@ -11,9 +11,12 @@ from statistics import mean, median
 from dotenv import load_dotenv
 
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
-from ai.tool_router.types import RouterTool, ToolRoute, RouterArgumentName
+from ai.tool_router.types import (
+    RouterArgumentName,
+    RouterTool,
+    ToolRoute,
+)
 from .config import USER_CONFIG
-
 from .scenarios_ru import TEST_GROUPS, ToolRouteTest
 # from .scenarios_eng import TEST_GROUPS, ToolRouteTest
 from .types import OllamaTiming, ResultRow
@@ -36,9 +39,36 @@ router = SemanticToolRouter(
     user_config=USER_CONFIG,
 )
 
-def _contains_word_stem(text: str, stem: str) -> bool:
+
+def _contains_word_stem(
+    text: str,
+    stem: str,
+) -> bool:
     pattern = rf"\b{re.escape(stem.casefold())}\w*"
-    return re.search(pattern, text.casefold()) is not None
+    return re.search(
+        pattern,
+        text.casefold(),
+    ) is not None
+
+
+def _validate_required_arguments(
+    result: ToolRoute,
+) -> list[str]:
+    errors: list[str] = []
+
+    for argument_name in result.tool.required_arguments:
+        value = result.arguments.get(argument_name)
+
+        if value is None:
+            errors.append(
+                f"missing required argument: {argument_name!r}",
+            )
+        elif not value.strip():
+            errors.append(
+                f"required argument is empty: {argument_name!r}",
+            )
+
+    return errors
 
 
 def _validate_web_search_query(
@@ -47,25 +77,28 @@ def _validate_web_search_query(
 ) -> list[str]:
     errors: list[str] = []
 
-    query = result.arguments.get(RouterArgumentName.QUERY)
+    query = result.arguments.get(
+        RouterArgumentName.QUERY,
+    )
 
     if not isinstance(query, str):
         errors.append(
-            "web_search query must be a string"
+            "web_search query must be a string",
         )
         return errors
 
     if not query.strip():
         errors.append(
-            "web_search query must not be empty"
+            "web_search query must not be empty",
         )
         return errors
 
- 
-
     for alternatives in test.expected_query_requirements:
         if any(
-            _contains_word_stem(query, alternative)
+            _contains_word_stem(
+                query,
+                alternative,
+            )
             for alternative in alternatives
         ):
             continue
@@ -73,7 +106,7 @@ def _validate_web_search_query(
         errors.append(
             "web_search query does not contain "
             "any expected value from "
-            f"{alternatives!r}: {query!r}"
+            f"{alternatives!r}: {query!r}",
         )
 
     return errors
@@ -88,25 +121,36 @@ def _validate_tool(
     if result.tool != test.expected_tool:
         errors.append(
             f"tool: expected {test.expected_tool.value!r}, "
-            f"got {result.tool.value!r}"
+            f"got {result.tool.value!r}",
         )
+        return errors
+
+    errors.extend(
+        _validate_required_arguments(result),
+    )
 
     if result.tool == RouterTool.WEB_SEARCH:
         errors.extend(
             _validate_web_search_query(
                 test,
                 result,
+            ),
+        )
+
+    for argument_name, expected_value in (
+        test.expected_arguments.items()
+    ):
+        actual_value = result.arguments.get(
+            argument_name,
+        )
+
+        if actual_value != expected_value:
+            errors.append(
+                "arguments: "
+                f"expected {argument_name!r}="
+                f"{expected_value!r}, "
+                f"got {actual_value!r}",
             )
-        )
-
-        return errors
-
-    if result.arguments != test.expected_arguments:
-        errors.append(
-            "arguments: "
-            f"expected {test.expected_arguments!r}, "
-            f"got {result.arguments!r}"
-        )
 
     return errors
 
@@ -116,9 +160,9 @@ def _validate_result(
     result: ToolRoute,
 ) -> list[str]:
     return _validate_tool(
-                test,
-                result,
-            )
+        test,
+        result,
+    )
 
 
 def _parse_ollama_timing(
@@ -137,13 +181,23 @@ def _parse_ollama_timing(
             "eval": None,
         }
 
-    timing = ast.literal_eval(match.group(1))
+    timing = ast.literal_eval(
+        match.group(1),
+    )
 
     return {
-        "ollama_total": timing.get("total_duration"),
-        "load": timing.get("load_duration"),
-        "prompt_eval": timing.get("prompt_eval_duration"),
-        "eval": timing.get("eval_duration"),
+        "ollama_total": timing.get(
+            "total_duration",
+        ),
+        "load": timing.get(
+            "load_duration",
+        ),
+        "prompt_eval": timing.get(
+            "prompt_eval_duration",
+        ),
+        "eval": timing.get(
+            "eval_duration",
+        ),
     }
 
 
@@ -293,13 +347,16 @@ def run_tests() -> None:
                 result = router.route(test.message)
 
             elapsed = time.perf_counter() - start
+
             ollama = _parse_ollama_timing(
-                captured.getvalue()
+                captured.getvalue(),
             )
+
             errors = _validate_result(
                 test,
                 result,
             )
+
             row: ResultRow = {
                 "test": index,
                 "group": group,
@@ -308,9 +365,13 @@ def run_tests() -> None:
                     elapsed,
                     3,
                 ),
-                "ollama_total": ollama["ollama_total"],
+                "ollama_total": ollama[
+                    "ollama_total"
+                ],
                 "load": ollama["load"],
-                "prompt_eval": ollama["prompt_eval"],
+                "prompt_eval": ollama[
+                    "prompt_eval"
+                ],
                 "eval": ollama["eval"],
                 "tool": result.tool,
                 "arguments": result.arguments,
@@ -325,7 +386,7 @@ def run_tests() -> None:
             elapsed = time.perf_counter() - start
 
             ollama = _parse_ollama_timing(
-                captured.getvalue()
+                captured.getvalue(),
             )
 
             row = {
@@ -336,9 +397,13 @@ def run_tests() -> None:
                     elapsed,
                     3,
                 ),
-                "ollama_total": ollama["ollama_total"],
+                "ollama_total": ollama[
+                    "ollama_total"
+                ],
                 "load": ollama["load"],
-                "prompt_eval": ollama["prompt_eval"],
+                "prompt_eval": ollama[
+                    "prompt_eval"
+                ],
                 "eval": ollama["eval"],
                 "tool": None,
                 "arguments": None,
@@ -487,7 +552,7 @@ def run_tests() -> None:
     print()
 
     timing_values = _collect_timing_values(
-        successful
+        successful,
     )
 
     for label, values in timing_values:
@@ -506,3 +571,4 @@ def run_tests() -> None:
 
 if __name__ == "__main__":
     run_tests()
+    
