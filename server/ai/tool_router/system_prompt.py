@@ -18,86 +18,36 @@ def build_system_prompt(
 USER CONTEXT
 ==================================================
 
+The following values are configured for the user:
+
 Configured city: {config.city}
 Configured country code: {config.country_code}
 Configured timezone: {config.timezone}
+
+IMPORTANT:
+
+User Context is NOT part of the user's message.
+
+It provides defaults only where explicitly allowed by the
+router rules.
+
+For GET_DATETIME:
+- NEVER use these configured values unless the user explicitly
+  mentions the corresponding location information.
+
+For WEB_SEARCH:
+- use the configured city only when the request is location-dependent
+  and the user did not explicitly provide a location;
+- include the configured city directly in the search query;
+- do not add the configured city to unrelated searches.
+
+Explicit user-provided location ALWAYS has priority over
+configured location.
 """
-    main_rools = """
-
-User Context provides default location information only.
-
-It MUST NOT determine which tool to use.
-
-For WEB SEARCH:
-
-- if the user explicitly mentions a location, use that location;
-- otherwise, if the request requires a location, use the configured city;
-- the user's explicit location always has priority;
-- include the location in the web_search query;
-- do not add a location to searches that do not require one.
-
-For GET DATETIME:
-
-- use only location information explicitly mentioned by the user;
-- if the user mentions no location, return arguments: {};
-- never copy the configured city into get_datetime;
-- never copy the configured country code into get_datetime;
-- never copy the configured timezone into get_datetime.
-
-Examples:
-
-"What is Python?"
-{
-    "tool": "default_assistant",
-}
-
-"What is the latest Python version?"
-{
-    "tool": "web_search",
-    "arguments": {
-        "query": "..."
-    },
-}
-query does not need the configured city
-
-"What's the weather?"
-{
-    "tool": "web_search",
-    "arguments": {
-        "query": "..."
-    },
-}
-query uses the configured city
-
-"What time is it?"
-{
-    "tool": "get_datetime",
-}
-
-"Сколько времени в Токио?"
-{
-    "tool": "get_datetime"
-    "arguments": {
-        "city": "Tokyo",
-    },
-}
-
-"What time is it in London, UK?"
-{
-    "tool": "get_datetime"
-    "arguments": {
-        "city": "London",
-        "country_code": "GB"
-    },
-}
-"""
-
-
 
     return "\n\n".join(
         [
             ROUTER_PROMPT,
             user_context,
-            main_rools,
         ]
     )

@@ -17,14 +17,19 @@ DATETIME_TOOL = Tool(
     name="get_datetime",
     description="""Get the current date and time.
 
-Use this tool ONLY when the person asks for:
-- the current time;
+Use this tool when the requested information itself is date or
+time information.
+
+Use it for:
+- current time;
 - today's date;
-- the current day of the week;
-- the current month;
-- the current year;
-- the current date and time;
-- the current date or time in a specific location.
+- current day;
+- current day of the week;
+- current month;
+- current year;
+- current date and time;
+- current date or time in a specific location;
+- determining whether today is a weekend or weekday.
 
 Do NOT use this tool for:
 - weather;
@@ -38,42 +43,43 @@ Do NOT use this tool for:
 - other current information that is not date/time information.
 
 Location parameters:
-- If a city is explicitly provided, pass it as "city".
-- If a country is explicitly provided, pass its ISO 3166-1 alpha-2
-  country code as "country_code".
-- If a timezone is explicitly provided, pass it as "timezone".
+- If a city is explicitly mentioned, pass it as "city".
+- If a country is explicitly mentioned, convert it to its
+  ISO 3166-1 alpha-2 code and pass it as "country_code".
+- If a timezone is explicitly mentioned, pass it as "timezone".
 - Do not invent missing location information.
-- Do not pass the configured user location when the person did not
-  explicitly provide a location.
+- Do not use configured user location unless the user explicitly
+  mentioned that location.
 
-If no location is provided, call the tool without arguments.
-The tool uses the configured user timezone in that case.""",
+If no location is explicitly provided, call the tool without
+location arguments.
+
+The tool uses the configured user timezone when no location
+arguments are provided.""",
     parameters={
         "type": "object",
         "properties": {
             "city": {
                 "type": "string",
                 "description": (
-                    "The city explicitly mentioned by the person. Normalize "
-                    "obvious translations or transliterations to the standard "
-                    "English city name when reliable."
+                    "A city explicitly mentioned by the person. "
+                    "Normalize obvious translations or transliterations "
+                    "to the standard English city name when reliable."
                 ),
             },
             "country_code": {
                 "type": "string",
                 "description": (
-                    "The ISO 3166-1 alpha-2 country code for a country "
-                    "explicitly mentioned by the person. Convert the country "
-                    "name to its ISO 3166-1 alpha-2 code."
+                    "The ISO 3166-1 alpha-2 code of a country explicitly "
+                    "mentioned by the person."
                 ),
             },
             "timezone": {
                 "type": "string",
                 "description": (
-                    "The standard IANA timezone corresponding to a timezone "
-                    "explicitly mentioned by the person. Normalize recognizable "
-                    "non-standard timezone forms to the standard IANA timezone "
-                    "name."
+                    "A standard IANA timezone explicitly mentioned by "
+                    "the person. Normalize recognizable non-standard "
+                    "timezone forms to the standard IANA name."
                 ),
             },
         },
@@ -88,35 +94,67 @@ web_search_tool = create_web_search_tool()
 
 WEB_SEARCH_TOOL = Tool(
     name="web_search",
-    description="""Search the internet for information that cannot be
-answered reliably without current or online information.
+    description="""Search the internet.
 
-Use this tool for:
-- current or latest information;
-- recent or changing information;
-- current versions or releases;
-- current prices or exchange rates;
-- weather or current conditions;
+Use this tool when the user explicitly asks to:
+- search;
+- find;
+- look up;
+- check;
+- verify;
+- find out;
+- research;
+- get information from online sources.
+
+Also use this tool for information that is:
+- current;
+- latest;
+- recent;
+- changing;
+- a current version;
+- a latest release;
+- a current price;
+- an exchange rate;
+- weather;
+- current conditions;
 - availability;
-- information explicitly requested to be searched,
-  checked, looked up, found, or verified online;
 - recent news;
-- information that must be obtained from an online source.
+- other information that requires online information.
+
+IMPORTANT:
+
+An explicit request to search/find/look up/check/verify/find out
+is enough to use this tool even when the subject itself is stable.
+
+For example:
+- "Search for information about Python."
+- "Find information about TCP."
+- "Look up recursion."
+- "Find information about Flutter."
+
+These MUST use web_search.
 
 Do NOT use this tool for:
+- stable definitions;
+- stable explanations;
+- conceptual questions;
+- reasoning;
+- ordinary programming help;
+- programming concepts;
+- debugging;
 - casual conversation;
 - personal questions;
-- definitions;
-- stable explanations;
-- reasoning;
-- programming help;
-- programming concepts;
 - stable general knowledge.
 
 A technical topic does not by itself require web search.
 
-Return a concise search query that directly matches
-the person's request.""",
+Return a concise search query that directly represents
+the user's request.
+
+For location-dependent searches:
+- use an explicitly provided location when available;
+- otherwise use the configured user city;
+- include that location directly in the search query.""",
     parameters={
         "type": "object",
         "properties": {
@@ -138,7 +176,7 @@ WEB_PAGE_TOOL = Tool(
     description="""Read and extract information from a specific web page.
 
 Use this tool when:
-- the person provides a URL and asks about its contents;
+- the user provides a URL and asks about its contents;
 - a specific page must be inspected;
 - the requested information is contained in that page.
 
