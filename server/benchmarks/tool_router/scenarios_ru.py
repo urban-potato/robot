@@ -1,19 +1,7 @@
-from dataclasses import dataclass
-from typing import Any
+from ai.tool_router.types import RouterArgumentName, RouterTool
+from .types import ToolRouteTest
 
 from .config import ANDROID_VARIANTS, FLUTTER_VARIANTS, LONDON_CITY_VARIANTS, PYTHON_VARIANTS, TOKYO_CITY_VARIANTS, UBUNTU_VARIANTS, USER_CITY_VARIANTS
-
-
-@dataclass(frozen=True)
-class ToolRouteTest:
-    message: str
-    expected_tool: str | None
-    expected_arguments: dict[str, Any]
-    expected_clarification: bool
-    expected_query_requirements: tuple[
-        tuple[str, ...],
-        ...,
-    ] = ()
 
 
 TEST_GROUPS = [
@@ -22,75 +10,51 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Что такое рекурсия?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает рекурсия?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Объясни рекурсию.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое TCP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает TCP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Объясни TCP.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое указатель в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает указатель в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое Python?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает сборщик мусора?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое HTTP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает HTTP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
         ],
     ),
@@ -100,147 +64,113 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Какая сейчас последняя версия Python?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас последняя версия пайтона?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
                 )
             ),
             ToolRouteTest(
                 "Какая последняя версия Python?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас версия Flutter?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия Flutter?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия флаттер?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия Флаттера?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас версия ESP-IDF?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия esp idf?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия ESP-IDF?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия Ubuntu?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     UBUNTU_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия Ubuntu?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     UBUNTU_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия Убунту?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     UBUNTU_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас версия Android?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     ANDROID_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас последняя версия андроид?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     ANDROID_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия Android?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     ANDROID_VARIANTS,
-                )
+                ),
             ),
             ToolRouteTest(
                 "Какая последняя версия андроида?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     ANDROID_VARIANTS,
-                )
+                ),
             ),
         ],
     ),
@@ -250,147 +180,107 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Как работает Python?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает пайтон?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает Flutter?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Объясни, как работает Флаттер?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает ESP-IDF?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает TCP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
+
             ),
             ToolRouteTest(
                 "Как работает Git?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое Python?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое Flutter?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое ESP-IDF?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое функция?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое стек вызовов?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое указатель?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое ссылка в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое процесс?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое поток?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает сборщик мусора?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает Git?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает TCP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как работает HTTP?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия Python?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия Flutter?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия ESP-IDF?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия Git?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+
             ),
         ],
     ),
@@ -400,75 +290,69 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Поищи информацию о Python.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Поищи информацию о питоне, который язык программирования.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Поищи информацию о Flutter.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Поищи информацию об ESP-IDF.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Поищи информацию о C++.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Поищи информацию о TCP.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Поищи информацию о рекурсии.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Найди документацию Python.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Найди документацию Flutter.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Найди документацию флаттера.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Найди документацию ESP-IDF.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Найди информацию об указателях в C++.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
         ],
     ),
@@ -478,39 +362,33 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Что написано на https://example.com?",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
             ToolRouteTest(
                 "Прочитай https://example.com",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
             ToolRouteTest(
                 "Что находится на странице https://example.com?",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
             ToolRouteTest(
                 "Расскажи, о чём страница https://example.com",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
             ToolRouteTest(
                 "Проверь содержимое https://example.com",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
             ToolRouteTest(
                 "Что говорит https://example.com?",
-                "web_page_read",
-                {"url": "https://example.com"},
-                False,
+                RouterTool.WEB_PAGE_READ,
+                expected_arguments = {RouterArgumentName.URL: "https://example.com"},
             ),
         ],
     ),
@@ -520,171 +398,129 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Который сейчас час?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Который час?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Сколько времени?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Сколько сейчас времени?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какая сейчас дата?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какое сегодня число?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какой сегодня день недели?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какой сегодня день?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Сегодня выходной?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какая сейчас дата и время?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Что сейчас за дата?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какой сейчас месяц?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Напомни, какой месяц.",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Какой сейчас год?",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Напомни какой год",
-                "get_datetime",
-                {},
-                False,
+                RouterTool.GET_DATETIME,
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Сколько времени в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Который сейчас час в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Который час в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Время в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Какая сейчас дата в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Какой сегодня день недели в Лондоне?",
-                "get_datetime",
-                {"city": "London"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "London"},
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Токио?",
-                "get_datetime",
-                {"city": "Tokyo"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
             ),
             ToolRouteTest(
                 "Какая сейчас дата в Токио?",
-                "get_datetime",
-                {"city": "Tokyo"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
             ),
             ToolRouteTest(
                 "Какой сегодня день недели в Токио?",
-                "get_datetime",
-                {"city": "Tokyo"},
-                False,
+                RouterTool.GET_DATETIME,
+                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Лондоне Великобритания?",
-                "get_datetime",
-                {
-                    "city": "London",
-                    "country_code": "GB",
+                RouterTool.GET_DATETIME,
+                expected_arguments = {
+                    RouterArgumentName.CITY: "London",
+                    RouterArgumentName.COUNTRY_CODE: "GB",
                 },
-                False,
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Токио Япония?",
-                "get_datetime",
-                {
-                    "city": "Tokyo",
-                    "country_code": "JP",
+                RouterTool.GET_DATETIME,
+                expected_arguments = {
+                    RouterArgumentName.CITY: "Tokyo",
+                    RouterArgumentName.COUNTRY_CODE: "JP",
                 },
-                False,
             ),
         ],
     ),
@@ -694,63 +530,44 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Какой у тебя любимый цвет?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Какой цвет тебе нравится?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Какой цвет ты любишь?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что ты любишь?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Как дела?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Чем ты сейчас занимаешься?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Ты любишь музыку?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Расскажи о себе.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Какие у тебя интересы?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что тебе нравится?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
+
             ),
         ],
     ),
@@ -760,63 +577,43 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Что такое класс в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое объект в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое указатель?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое ссылка в C++?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Чем указатель отличается от ссылки?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое функция?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое рекурсия?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое стек вызовов?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что такое процесс?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Чем процесс отличается от потока?",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
         ],
     ),
@@ -826,69 +623,47 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Какая сейчас версия C++?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия C++?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия си плюс плюс?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия GCC?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия GCC?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия Clang?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия Clang?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия Git?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая сейчас версия гит?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия Git?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Какая последняя версия гита?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
         ],
     ),
@@ -898,39 +673,40 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Узнай последнюю версию Python.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Узнай текущую версию Flutter.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Узнай текущую версию ESP-IDF.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Узнай, сколько сейчас стоит доллар.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Узнай последние изменения в Python.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    PYTHON_VARIANTS,
+                ),
             ),
             ToolRouteTest(
                 "Что нового во флаттере?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
+                    FLUTTER_VARIANTS,
+                ),
+
             ),
         ],
     ),
@@ -940,10 +716,8 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Проверь погоду на завтра.",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "weather",
                         "погода",
@@ -955,10 +729,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Какая погода сегодня?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "weather",
                         "погода",
@@ -970,10 +742,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "rain",
                         "дождь",
@@ -984,10 +754,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Какая температура сейчас?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "temperature",
                         "температура",
@@ -999,10 +767,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Какая погода завтра в Лондоне?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "weather",
                         "погода",
@@ -1014,10 +780,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь в Токио?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "rain",
                         "дождь",
@@ -1030,10 +794,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Какая температура сейчас в Лондоне?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "temperature",
                         "температура",
@@ -1053,63 +815,48 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Расскажи про Python.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Расскажи про Flutter.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
             ),
             ToolRouteTest(
                 "Что нового в Python?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
                 ),
             ),
             ToolRouteTest(
                 "Что нового в Flutter?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
                 ),
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Python?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
                 ),
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Flutter?",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     FLUTTER_VARIANTS,
                 ),
             ),
             ToolRouteTest(
                 "Что нового в ESP-IDF?",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Расскажи про ESP32.",
-                None,
-                {},
-                False,
+                RouterTool.DEFAULT_ASSISTANT,
+
             ),
         ],
     ),
@@ -1119,27 +866,19 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Узнай расписание на сегодня.",
-                None,
-                {},
-                True,
+                RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
                 "Проверь, доступен ли сейчас этот сервис.",
-                None,
-                {},
-                True,
+                RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
                 "Проверь, сколько стоит.",
-                None,
-                {},
-                True,
+                RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
                 "Узнай последние новости.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
         ],
     ),
@@ -1149,10 +888,8 @@ TEST_GROUPS = [
         [
             ToolRouteTest(
                 "Проверь погоду на завтра в Лондоне.",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "weather",
                         "погода",
@@ -1164,10 +901,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Проверь погоду на завтра в Токио.",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "weather",
                         "погода",
@@ -1179,10 +914,8 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Проверь, доступен ли сейчас GitHub.",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     (
                         "GitHub",
                         "гитхаб",
@@ -1191,36 +924,26 @@ TEST_GROUPS = [
             ),
             ToolRouteTest(
                 "Поищи информацию о рекурсии.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Поищи информацию о TCP.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Найди документацию Python.",
-                "web_search",
-                {},
-                False,
-                (
+                RouterTool.WEB_SEARCH,
+                expected_query_requirements = (
                     PYTHON_VARIANTS,
                 ),
             ),
             ToolRouteTest(
                 "Поищи, что такое указатели в C++.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
                 "Узнай, сколько сейчас стоит доллар.",
-                "web_search",
-                {},
-                False,
+                RouterTool.WEB_SEARCH,
             ),
         ],
     ),

@@ -21,6 +21,8 @@ USER CONTEXT
 Configured city: {config.city}
 Configured country code: {config.country_code}
 Configured timezone: {config.timezone}
+"""
+    main_rools = """
 
 User Context provides default location information only.
 
@@ -37,7 +39,7 @@ For WEB SEARCH:
 For GET DATETIME:
 
 - use only location information explicitly mentioned by the user;
-- if the user mentions no location, return arguments: {{}};
+- if the user mentions no location, return arguments: {};
 - never copy the configured city into get_datetime;
 - never copy the configured country code into get_datetime;
 - never copy the configured timezone into get_datetime.
@@ -45,34 +47,57 @@ For GET DATETIME:
 Examples:
 
 "What is Python?"
--> NO TOOL
+{
+    "tool": "default_assistant",
+}
 
 "What is the latest Python version?"
--> web_search
+{
+    "tool": "web_search",
+    "arguments": {
+        "query": "..."
+    },
+}
 query does not need the configured city
 
 "What's the weather?"
--> web_search
+{
+    "tool": "web_search",
+    "arguments": {
+        "query": "..."
+    },
+}
 query uses the configured city
 
 "What time is it?"
--> get_datetime
-arguments: {{}}
+{
+    "tool": "get_datetime",
+}
 
-"What time is it in Tokyo?"
--> get_datetime
-arguments:
-{{"city": "Tokyo"}}
+"Сколько времени в Токио?"
+{
+    "tool": "get_datetime"
+    "arguments": {
+        "city": "Tokyo",
+    },
+}
 
 "What time is it in London, UK?"
--> get_datetime
-arguments:
-{{"city": "London", "country_code": "GB"}}
+{
+    "tool": "get_datetime"
+    "arguments": {
+        "city": "London",
+        "country_code": "GB"
+    },
+}
 """
+
+
 
     return "\n\n".join(
         [
             ROUTER_PROMPT,
             user_context,
+            main_rools,
         ]
     )

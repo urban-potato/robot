@@ -11,7 +11,7 @@ from statistics import mean, median
 from dotenv import load_dotenv
 
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
-from ai.tool_router.types import ToolRoute
+from ai.tool_router.types import RouterTool, ToolRoute, RouterArgumentName
 from .config import USER_CONFIG
 
 from .scenarios_ru import TEST_GROUPS, ToolRouteTest
@@ -36,12 +36,92 @@ router = SemanticToolRouter(
     user_config=USER_CONFIG,
 )
 
-def contains_word_stem(text: str, stem: str) -> bool:
+def _contains_word_stem(text: str, stem: str) -> bool:
     pattern = rf"\b{re.escape(stem.casefold())}\w*"
     return re.search(pattern, text.casefold()) is not None
 
 
-def parse_ollama_timing(
+def _validate_web_search_query(
+    test: ToolRouteTest,
+    result: ToolRoute,
+) -> list[str]:
+    errors: list[str] = []
+
+    query = result.arguments.get(RouterArgumentName.QUERY)
+
+    if not isinstance(query, str):
+        errors.append(
+            "web_search query must be a string"
+        )
+        return errors
+
+    if not query.strip():
+        errors.append(
+            "web_search query must not be empty"
+        )
+        return errors
+
+ 
+
+    for alternatives in test.expected_query_requirements:
+        if any(
+            _contains_word_stem(query, alternative)
+            for alternative in alternatives
+        ):
+            continue
+
+        errors.append(
+            "web_search query does not contain "
+            "any expected value from "
+            f"{alternatives!r}: {query!r}"
+        )
+
+    return errors
+
+
+def _validate_tool(
+    test: ToolRouteTest,
+    result: ToolRoute,
+) -> list[str]:
+    errors: list[str] = []
+
+    if result.tool != test.expected_tool:
+        errors.append(
+            f"tool: expected {test.expected_tool.value!r}, "
+            f"got {result.tool.value!r}"
+        )
+
+    if result.tool == RouterTool.WEB_SEARCH:
+        errors.extend(
+            _validate_web_search_query(
+                test,
+                result,
+            )
+        )
+
+        return errors
+
+    if result.arguments != test.expected_arguments:
+        errors.append(
+            "arguments: "
+            f"expected {test.expected_arguments!r}, "
+            f"got {result.arguments!r}"
+        )
+
+    return errors
+
+
+def _validate_result(
+    test: ToolRouteTest,
+    result: ToolRoute,
+) -> list[str]:
+    return _validate_tool(
+                test,
+                result,
+            )
+
+
+def _parse_ollama_timing(
     output: str,
 ) -> OllamaTiming:
     match = re.search(
@@ -67,134 +147,7 @@ def parse_ollama_timing(
     }
 
 
-def validate_structure(
-    result: ToolRoute,
-) -> list[str]:
-    errors: list[str] = []
-
-    if result.needs_clarification:
-        if result.tool is not None:
-            errors.append(
-                "clarification has a tool"
-            )
-
-        if result.arguments:
-            errors.append(
-                "clarification has arguments"
-            )
-
-        if not result.clarification_question:
-            errors.append(
-                "clarification_question is missing"
-            )
-
-    else:
-        if result.clarification_question is not None:
-            errors.append(
-                "clarification_question must be None"
-            )
-
-    if result.tool is None and result.arguments:
-        errors.append(
-            "arguments must be empty when tool is None"
-        )
-
-    return errors
-
-
-def validate_web_search_query(
-    test: ToolRouteTest,
-    result: ToolRoute,
-) -> list[str]:
-    errors: list[str] = []
-
-    query = result.arguments.get("query")
-
-    if not isinstance(query, str):
-        errors.append(
-            "web_search query must be a string"
-        )
-        return errors
-
-    if not query.strip():
-        errors.append(
-            "web_search query must not be empty"
-        )
-        return errors
-
- 
-
-    for alternatives in test.expected_query_requirements:
-        if any(
-            contains_word_stem(query, alternative)
-            for alternative in alternatives
-        ):
-            continue
-
-        errors.append(
-            "web_search query does not contain "
-            "any expected value from "
-            f"{alternatives!r}: {query!r}"
-        )
-
-    return errors
-
-
-def validate_tool(
-    test: ToolRouteTest,
-    result: ToolRoute,
-) -> list[str]:
-    errors: list[str] = []
-
-    if result.tool != test.expected_tool:
-        errors.append(
-            f"tool: expected {test.expected_tool!r}, "
-            f"got {result.tool!r}"
-        )
-
-    if result.needs_clarification != test.expected_clarification:
-        errors.append(
-            "needs_clarification: "
-            f"expected {test.expected_clarification!r}, "
-            f"got {result.needs_clarification!r}"
-        )
-
-    if result.tool == "web_search":
-        errors.extend(
-            validate_web_search_query(
-                test,
-                result,
-            )
-        )
-
-        return errors
-
-    if result.arguments != test.expected_arguments:
-        errors.append(
-            "arguments: "
-            f"expected {test.expected_arguments!r}, "
-            f"got {result.arguments!r}"
-        )
-
-    return errors
-
-
-def validate_result(
-    test: ToolRouteTest,
-    result: ToolRoute,
-) -> list[str]:
-    errors = validate_structure(result)
-    errors.extend(
-        validate_tool(
-            test,
-            result,
-        )
-    )
-
-    return errors
-
-
-def collect_timing_values(
+def _collect_timing_values(
     successful: list[ResultRow],
 ) -> list[tuple[str, list[float]]]:
     timing_values: list[tuple[str, list[float]]] = [
@@ -235,7 +188,7 @@ def collect_timing_values(
     return timing_values
 
 
-def print_group_results(
+def _print_group_results(
     results: list[ResultRow],
 ) -> None:
     group_results: dict[str, tuple[int, int]] = {}
@@ -333,7 +286,6 @@ def run_tests() -> None:
         start=1,
     ):
         captured = io.StringIO()
-
         start = time.perf_counter()
 
         try:
@@ -341,16 +293,13 @@ def run_tests() -> None:
                 result = router.route(test.message)
 
             elapsed = time.perf_counter() - start
-
-            ollama = parse_ollama_timing(
+            ollama = _parse_ollama_timing(
                 captured.getvalue()
             )
-
-            errors = validate_result(
+            errors = _validate_result(
                 test,
                 result,
             )
-
             row: ResultRow = {
                 "test": index,
                 "group": group,
@@ -365,12 +314,6 @@ def run_tests() -> None:
                 "eval": ollama["eval"],
                 "tool": result.tool,
                 "arguments": result.arguments,
-                "needs_clarification": (
-                    result.needs_clarification
-                ),
-                "clarification_question": (
-                    result.clarification_question
-                ),
                 "route_correct": not errors,
                 "validation_errors": (
                     " | ".join(errors)
@@ -381,7 +324,7 @@ def run_tests() -> None:
         except Exception as error:
             elapsed = time.perf_counter() - start
 
-            ollama = parse_ollama_timing(
+            ollama = _parse_ollama_timing(
                 captured.getvalue()
             )
 
@@ -399,8 +342,6 @@ def run_tests() -> None:
                 "eval": ollama["eval"],
                 "tool": None,
                 "arguments": None,
-                "needs_clarification": None,
-                "clarification_question": None,
                 "route_correct": False,
                 "validation_errors": "",
                 "error": (
@@ -447,8 +388,6 @@ def run_tests() -> None:
         "eval",
         "tool",
         "arguments",
-        "needs_clarification",
-        "clarification_question",
         "route_correct",
         "validation_errors",
         "error",
@@ -547,7 +486,7 @@ def run_tests() -> None:
 
     print()
 
-    timing_values = collect_timing_values(
+    timing_values = _collect_timing_values(
         successful
     )
 
@@ -558,7 +497,7 @@ def run_tests() -> None:
                 f"{mean(values):.3f} s"
             )
 
-    print_group_results(results)
+    _print_group_results(results)
 
     print(
         f"\nCSV saved to: {CSV_PATH}"

@@ -38,15 +38,15 @@ Do NOT use this tool for:
 - other current information that is not date/time information.
 
 Location parameters:
-- If a city is explicitly provided, pass it as city.
+- If a city is explicitly provided, pass it as "city".
 - If a country is explicitly provided, pass its ISO 3166-1 alpha-2
-  country code as country_code.
-- If a timezone is explicitly provided, pass it as timezone.
+  country code as "country_code".
+- If a timezone is explicitly provided, pass it as "timezone".
 - Do not invent missing location information.
 - Do not pass the configured user location when the person did not
   explicitly provide a location.
 
-If no location is provided, call the tool without location arguments.
+If no location is provided, call the tool without arguments.
 The tool uses the configured user timezone in that case.""",
     parameters={
         "type": "object",

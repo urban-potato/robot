@@ -2,66 +2,10 @@ import json
 import urllib.request
 from typing import Any, cast
 
+from assistant.types import UserConfig
+from .tool_route_schema import TOOL_ROUTE_SCHEMA
 from .system_prompt import build_system_prompt
-from .types import ToolRoute
-
-
-TOOL_NAMES: set[str | None] = {
-    None,
-    "web_search",
-    "web_page_read",
-    "get_datetime",
-}
-
-
-TOOL_ROUTE_SCHEMA: dict[str, Any] = {
-    "type": "object",
-    "properties": {
-        "tool": {
-            "type": ["string", "null"],
-            "enum": [
-                None,
-                "web_search",
-                "web_page_read",
-                "get_datetime",
-            ],
-        },
-        "arguments": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                },
-                "url": {
-                    "type": "string",
-                },
-                "city": {
-                    "type": "string",
-                },
-                "country_code": {
-                    "type": "string",
-                },
-                "timezone": {
-                    "type": "string",
-                },
-            },
-            "additionalProperties": False,
-        },
-        "needs_clarification": {
-            "type": "boolean",
-        },
-        "clarification_question": {
-            "type": ["string", "null"],
-        },
-    },
-    "required": [
-        "tool",
-        "arguments",
-        "needs_clarification",
-        "clarification_question",
-    ],
-    "additionalProperties": False,
-}
+from .types import *
 
 
 class SemanticToolRouter:
@@ -69,7 +13,7 @@ class SemanticToolRouter:
         self,
         ollama_url: str,
         model: str,
-        user_config: Any | None = None,
+        user_config: UserConfig | None = None,
     ):
         self.ollama_url = ollama_url
         self.model = model
@@ -79,7 +23,69 @@ class SemanticToolRouter:
         self,
         message: str,
     ) -> ToolRoute:
-        request_data: dict[str, Any] = {
+        response = self._chat(message)
+        result = self._get_content(response)
+
+        return self._build_route(result)
+
+    def _get_content(self, response: Any):
+        content = response["message"]["content"]
+
+        if not isinstance(content, str):
+            raise ValueError(
+                "Ollama returned a non-string router response."
+            )
+
+        parsed: Any = json.loads(content)
+
+        if not isinstance(parsed, dict):
+            raise ValueError(
+                "Router response must be a JSON object."
+            )
+
+        result = cast(
+            dict[str, Any],
+            parsed,
+        )
+        return result
+
+    def _build_route(
+        self,
+        result: dict[str, Any],
+    ) -> ToolRoute:
+        tool_value = result.get(RouterField.TOOL)
+
+        if tool_value is not None and not isinstance(tool_value, str):
+            raise ValueError(
+                f"Router field {RouterField.TOOL!r} must be a string."
+            )
+
+        try:
+            tool = RouterTool(tool_value)
+        except ValueError as e:
+            raise ValueError(
+                f"Unknown router tool: {tool_value!r}"
+            ) from e
+
+        arguments = result.get(RouterField.ARGUMENTS, {})
+
+        if not isinstance(arguments, dict):
+            raise ValueError(
+                "Router field 'arguments' must be an object."
+            )
+
+        arguments = cast(
+            dict[str, Any],
+            arguments,
+        )
+
+        return ToolRoute(
+            tool=tool,
+            arguments=tool.normalize_arguments(arguments),
+        )
+
+    def _build_request_data(self, message: str) -> dict[str, Any]:
+        return {
             "model": self.model,
             "messages": [
                 {
@@ -97,6 +103,26 @@ class SemanticToolRouter:
                 "temperature": 0,
             },
         }
+
+    def _print_info(self, data: Any) -> None:
+        print(
+            "Semantic router timing:",
+            {
+                key: round(
+                    data.get(key, 0) / 1_000_000_000,
+                    3,
+                )
+                for key in (
+                    "total_duration",
+                    "load_duration",
+                    "prompt_eval_duration",
+                    "eval_duration",
+                )
+            },
+        )
+
+    def _chat(self, message: str):
+        request_data: dict[str, Any] = self._build_request_data(message)
 
         request_body = json.dumps(
             request_data,
@@ -117,203 +143,5 @@ class SemanticToolRouter:
         ) as response:
             data: Any = json.load(response)
 
-        print(
-            "Semantic router timing:",
-            {
-                key: round(
-                    data.get(key, 0) / 1_000_000_000,
-                    3,
-                )
-                for key in (
-                    "total_duration",
-                    "load_duration",
-                    "prompt_eval_duration",
-                    "eval_duration",
-                )
-            },
-        )
-
-        content = data["message"]["content"]
-
-        if not isinstance(content, str):
-            raise ValueError(
-                "Ollama returned a non-string router response."
-            )
-
-        parsed: Any = json.loads(content)
-
-        if not isinstance(parsed, dict):
-            raise ValueError(
-                "Router response must be a JSON object."
-            )
-
-        result = cast(
-            dict[str, Any],
-            parsed,
-        )
-
-        return self._build_route(result)
-
-    def _build_route(
-        self,
-        result: dict[str, Any],
-    ) -> ToolRoute:
-        tool = result.get("tool")
-
-        if tool is not None and not isinstance(tool, str):
-            raise ValueError(
-                "Router field 'tool' must be a string or null."
-            )
-
-        if tool not in TOOL_NAMES:
-            raise ValueError(
-                f"Unknown router tool: {tool!r}"
-            )
-
-        arguments = result.get("arguments", {})
-
-        if not isinstance(arguments, dict):
-            raise ValueError(
-                "Router field 'arguments' must be an object."
-            )
-
-        arguments = cast(
-            dict[str, Any],
-            arguments,
-        )
-
-        needs_clarification = result.get(
-            "needs_clarification"
-        )
-
-        if not isinstance(needs_clarification, bool):
-            raise ValueError(
-                "Router field 'needs_clarification' must be boolean."
-            )
-
-        clarification_question = result.get(
-            "clarification_question"
-        )
-
-        if (
-            clarification_question is not None
-            and not isinstance(clarification_question, str)
-        ):
-            raise ValueError(
-                "Router field 'clarification_question' must be a string "
-                "or null."
-            )
-
-        if needs_clarification:
-            return ToolRoute(
-                tool=None,
-                arguments={},
-                needs_clarification=True,
-                clarification_question=clarification_question,
-            )
-
-        normalized_arguments = self._normalize_arguments(
-            tool,
-            arguments,
-        )
-
-        return ToolRoute(
-            tool=tool,
-            arguments=normalized_arguments,
-            needs_clarification=False,
-            clarification_question=None,
-        )
-
-    def _normalize_arguments(
-        self,
-        tool: str | None,
-        arguments: dict[str, Any],
-    ) -> dict[str, str]:
-        if tool is None:
-            return {}
-
-        if tool == "web_search":
-            query = arguments.get("query")
-
-            if not isinstance(query, str) or not query.strip():
-                raise ValueError(
-                    "web_search requires a non-empty string query."
-                )
-
-            return {
-                "query": query.strip(),
-            }
-
-        if tool == "web_page_read":
-            url = arguments.get("url")
-
-            if not isinstance(url, str) or not url.strip():
-                raise ValueError(
-                    "web_page_read requires a non-empty string URL."
-                )
-
-            return {
-                "url": url.strip(),
-            }
-
-        if tool == "get_datetime":
-            return self._normalize_datetime_arguments(
-                arguments
-            )
-
-        raise ValueError(
-            f"Unsupported router tool: {tool!r}"
-        )
-
-    def _normalize_datetime_arguments(
-        self,
-        arguments: dict[str, Any],
-    ) -> dict[str, str]:
-        city = arguments.get("city")
-        country_code = arguments.get("country_code")
-        timezone = arguments.get("timezone")
-
-        if city is not None and not isinstance(city, str):
-            raise ValueError(
-                "get_datetime city must be a string."
-            )
-
-        if (
-            country_code is not None
-            and not isinstance(country_code, str)
-        ):
-            raise ValueError(
-                "get_datetime country_code must be a string."
-            )
-
-        if timezone is not None and not isinstance(timezone, str):
-            raise ValueError(
-                "get_datetime timezone must be a string."
-            )
-
-        normalized_arguments: dict[str, str] = {}
-
-        if isinstance(city, str):
-            normalized_city = city.strip()
-
-            if normalized_city:
-                normalized_arguments["city"] = normalized_city
-
-        if isinstance(country_code, str):
-            normalized_country_code = country_code.strip().upper()
-
-            if normalized_country_code:
-                normalized_arguments["country_code"] = (
-                    normalized_country_code
-                )
-
-        if isinstance(timezone, str):
-            normalized_timezone = timezone.strip()
-
-            if normalized_timezone:
-                normalized_arguments["timezone"] = (
-                    normalized_timezone
-                )
-
-        return normalized_arguments
-    
+        self._print_info(data)
+        return data
