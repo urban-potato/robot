@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -8,19 +7,15 @@ def _empty_arguments() -> dict[str, str]:
     return {}
 
 
-@dataclass
-class ToolRoute:
-    tool: RouterTool
-    # arguments: dict[str, str] | None = None
-    arguments: dict[str, str] = field(default_factory=_empty_arguments)
-
 class RouterArgumentNormalization(str, Enum):
     NONE = "none"
     UPPERCASE = "uppercase"
 
+
 class RouterField:
     TOOL = "tool"
     ARGUMENTS = "arguments"
+
 
 class RouterArgumentName:
     QUERY = "query"
@@ -29,6 +24,47 @@ class RouterArgumentName:
     COUNTRY_CODE = "country_code"
     TIMEZONE = "timezone"
     QUESTION = "question"
+
+
+@dataclass(frozen=True)
+class RouterArgument:
+    name: str
+    required: bool = False
+    normalization: RouterArgumentNormalization = (
+        RouterArgumentNormalization.NONE
+    )
+
+    def normalize(
+        self,
+        arguments: dict[str, Any],
+    ) -> str | None:
+        value = arguments.get(self.name)
+
+        if not isinstance(value, str):
+            value = None
+        else:
+            value = value.strip()
+
+            if not value:
+                value = None
+
+        if value is None:
+            if self.required:
+                raise ValueError(
+                    "Required router argument is missing: "
+                    f"{self.name!r}."
+                )
+
+            return None
+
+        match self.normalization:
+            case RouterArgumentNormalization.NONE:
+                pass
+
+            case RouterArgumentNormalization.UPPERCASE:
+                value = value.upper()
+
+        return value
 
 
 class RouterTool(str, Enum):
@@ -59,12 +95,18 @@ class RouterTool(str, Enum):
 
             case RouterTool.GET_DATETIME:
                 return [
-                    RouterArgument(RouterArgumentName.CITY),
+                    RouterArgument(
+                        RouterArgumentName.CITY,
+                    ),
                     RouterArgument(
                         RouterArgumentName.COUNTRY_CODE,
-                        normalization=RouterArgumentNormalization.UPPERCASE,
+                        normalization=(
+                            RouterArgumentNormalization.UPPERCASE
+                        ),
                     ),
-                    RouterArgument(RouterArgumentName.TIMEZONE),
+                    RouterArgument(
+                        RouterArgumentName.TIMEZONE,
+                    ),
                 ]
 
             case RouterTool.DEFAULT_ASSISTANT:
@@ -108,40 +150,10 @@ class RouterTool(str, Enum):
             if not argument.required
         ]
 
-@dataclass(frozen=True)
-class RouterArgument:
-    name: str
-    required: bool = False
-    normalization: RouterArgumentNormalization = RouterArgumentNormalization.NONE
 
-    def normalize(
-        self,
-        arguments: dict[str, Any],
-    ) -> str | None:
-        value = arguments.get(self.name)
-
-        if not isinstance(value, str):
-            value = None
-        else:
-            value = value.strip()
-
-            if not value:
-                value = None
-
-        if value is None:
-            if self.required:
-                raise ValueError(
-                    f"Required router argument is missing: {self.name!r}."
-                )
-
-            return None
-
-        match self.normalization:
-            case RouterArgumentNormalization.NONE:
-                pass
-
-            case RouterArgumentNormalization.UPPERCASE:
-                value = value.upper()
-
-        return value
-    
+@dataclass
+class ToolRoute:
+    tool: RouterTool
+    arguments: dict[str, str] = field(
+        default_factory=_empty_arguments,
+    )

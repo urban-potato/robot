@@ -18,33 +18,32 @@ def build_system_prompt(
 USER CONTEXT
 ==================================================
 
-The following values are configured for the user:
-
 Configured city: {config.city}
 Configured country code: {config.country_code}
 Configured timezone: {config.timezone}
 
-IMPORTANT:
+These values are configuration, NOT user input.
 
-User Context is NOT part of the user's message.
+They have different roles:
 
-It provides defaults only where explicitly allowed by the
-router rules.
+GET_DATETIME:
+- configured location is NOT used as an argument;
+- only explicit location from the user's message may become
+  a tool argument;
+- with no explicit location, get_datetime receives no location
+  arguments and uses the configured timezone internally.
 
-For GET_DATETIME:
-- NEVER use these configured values unless the user explicitly
-  mentions the corresponding location information.
-
-For WEB_SEARCH:
-- use the configured city only when the request is location-dependent
-  and the user did not explicitly provide a location;
-- include the configured city directly in the search query;
+WEB_SEARCH:
+- configured city is used only as the fallback location for
+  location-dependent searches;
+- if the user explicitly provides a location, use that location
+  instead;
+- the selected location must appear in the search query;
 - do not add the configured city to unrelated searches.
 
-Explicit user-provided location ALWAYS has priority over
-configured location.
+Configured location is NOT a general default for all tools.
 """
-
+    
     return "\n\n".join(
         [
             ROUTER_PROMPT,

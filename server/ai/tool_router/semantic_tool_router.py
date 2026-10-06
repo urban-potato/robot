@@ -5,7 +5,11 @@ from typing import Any, cast
 from assistant.types import UserConfig
 from .tool_route_schema import TOOL_ROUTE_SCHEMA
 from .system_prompt import build_system_prompt
-from .types import *
+from .types import (
+    RouterField,
+    RouterTool,
+    ToolRoute,
+)
 
 
 class SemanticToolRouter:
@@ -17,7 +21,9 @@ class SemanticToolRouter:
     ):
         self.ollama_url = ollama_url
         self.model = model
-        self.system_prompt = build_system_prompt(user_config)
+        self.system_prompt = build_system_prompt(
+            user_config,
+        )
 
     def route(
         self,
@@ -28,7 +34,10 @@ class SemanticToolRouter:
 
         return self._build_route(result)
 
-    def _get_content(self, response: Any):
+    def _get_content(
+        self,
+        response: Any,
+    ) -> dict[str, Any]:
         content = response["message"]["content"]
 
         if not isinstance(content, str):
@@ -47,27 +56,37 @@ class SemanticToolRouter:
             dict[str, Any],
             parsed,
         )
+
         return result
 
     def _build_route(
         self,
         result: dict[str, Any],
     ) -> ToolRoute:
-        tool_value = result.get(RouterField.TOOL)
+        tool_value = result.get(
+            RouterField.TOOL,
+        )
 
-        if tool_value is not None and not isinstance(tool_value, str):
+        if tool_value is not None and not isinstance(
+            tool_value,
+            str,
+        ):
             raise ValueError(
-                f"Router field {RouterField.TOOL!r} must be a string."
+                f"Router field {RouterField.TOOL!r} "
+                "must be a string."
             )
 
         try:
             tool = RouterTool(tool_value)
-        except ValueError as e:
+        except ValueError as error:
             raise ValueError(
                 f"Unknown router tool: {tool_value!r}"
-            ) from e
+            ) from error
 
-        arguments = result.get(RouterField.ARGUMENTS, {})
+        arguments = result.get(
+            RouterField.ARGUMENTS,
+            {},
+        )
 
         if not isinstance(arguments, dict):
             raise ValueError(
@@ -81,10 +100,15 @@ class SemanticToolRouter:
 
         return ToolRoute(
             tool=tool,
-            arguments=tool.normalize_arguments(arguments),
+            arguments=tool.normalize_arguments(
+                arguments,
+            ),
         )
 
-    def _build_request_data(self, message: str) -> dict[str, Any]:
+    def _build_request_data(
+        self,
+        message: str,
+    ) -> dict[str, Any]:
         return {
             "model": self.model,
             "messages": [
@@ -104,7 +128,10 @@ class SemanticToolRouter:
             },
         }
 
-    def _print_info(self, data: Any) -> None:
+    def _print_info(
+        self,
+        data: Any,
+    ) -> None:
         print(
             "Semantic router timing:",
             {
@@ -121,8 +148,13 @@ class SemanticToolRouter:
             },
         )
 
-    def _chat(self, message: str):
-        request_data: dict[str, Any] = self._build_request_data(message)
+    def _chat(
+        self,
+        message: str,
+    ) -> Any:
+        request_data = self._build_request_data(
+            message,
+        )
 
         request_body = json.dumps(
             request_data,
@@ -144,4 +176,6 @@ class SemanticToolRouter:
             data: Any = json.load(response)
 
         self._print_info(data)
+
         return data
+    

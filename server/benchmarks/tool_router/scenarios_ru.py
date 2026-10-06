@@ -65,51 +65,65 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Какая сейчас последняя версия Python?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас последняя версия пайтона?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                )
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Python?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас версия Flutter?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Flutter?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия флаттер?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Флаттера?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас версия ESP-IDF?",
@@ -126,51 +140,65 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Какая сейчас версия Ubuntu?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    UBUNTU_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        UBUNTU_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Ubuntu?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    UBUNTU_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        UBUNTU_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Убунту?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    UBUNTU_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        UBUNTU_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас версия Android?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    ANDROID_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        ANDROID_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас последняя версия андроид?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    ANDROID_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        ANDROID_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия Android?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    ANDROID_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        ANDROID_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая последняя версия андроида?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    ANDROID_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        ANDROID_VARIANTS,
+                    ),
+                },
             ),
         ],
     ),
@@ -262,16 +290,20 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия Python?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия Flutter?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас рекомендуемая версия ESP-IDF?",
@@ -291,23 +323,29 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Поищи информацию о Python.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Поищи информацию о питоне, который язык программирования.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Поищи информацию о Flutter.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Поищи информацию об ESP-IDF.",
@@ -328,23 +366,29 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Найди документацию Python.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Найди документацию Flutter.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Найди документацию флаттера.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Найди документацию ESP-IDF.",
@@ -459,67 +503,124 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Сколько сейчас времени в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Сколько времени в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Который сейчас час в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Который час в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Время в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас дата в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какой сегодня день недели в Лондоне?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "London"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Токио?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        TOKYO_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какая сейчас дата в Токио?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        TOKYO_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Какой сегодня день недели в Токио?",
                 RouterTool.GET_DATETIME,
-                expected_arguments = {RouterArgumentName.CITY: "Tokyo"},
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        TOKYO_CITY_VARIANTS,
+                    ),
+                },
+            ),
+            ToolRouteTest(
+                "Время Токио",
+                RouterTool.GET_DATETIME,
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        TOKYO_CITY_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Лондоне Великобритания?",
                 RouterTool.GET_DATETIME,
                 expected_arguments = {
-                    RouterArgumentName.CITY: "London",
                     RouterArgumentName.COUNTRY_CODE: "GB",
+                },
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        LONDON_CITY_VARIANTS,
+                    ),
                 },
             ),
             ToolRouteTest(
                 "Сколько сейчас времени в Токио Япония?",
                 RouterTool.GET_DATETIME,
                 expected_arguments = {
-                    RouterArgumentName.CITY: "Tokyo",
                     RouterArgumentName.COUNTRY_CODE: "JP",
+                },
+                expected_argument_requirements={
+                    RouterArgumentName.CITY: (
+                        TOKYO_CITY_VARIANTS,
+                    ),
                 },
             ),
         ],
@@ -674,16 +775,20 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Узнай последнюю версию Python.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Узнай текущую версию Flutter.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Узнай текущую версию ESP-IDF.",
@@ -696,16 +801,20 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Узнай последние изменения в Python.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Что нового во флаттере?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
 
             ),
         ],
@@ -717,95 +826,127 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Проверь погоду на завтра.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "weather",
-                        "погода",
-                        "forecast",
-                        "прогноз",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        USER_CITY_VARIANTS,
                     ),
-                    USER_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Какая погода сегодня?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "weather",
-                        "погода",
-                        "forecast",
-                        "прогноз",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        USER_CITY_VARIANTS,
                     ),
-                    USER_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "rain",
-                        "дождь",
-                        "rainfall",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "rain",
+                            "дождь",
+                            "rainfall",
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        USER_CITY_VARIANTS,
                     ),
-                    USER_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Какая температура сейчас?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "temperature",
-                        "температура",
-                        "degrees",
-                        "градус",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "temperature",
+                            "температура",
+                            "degrees",
+                            "градус",
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        USER_CITY_VARIANTS,
                     ),
-                    USER_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Какая погода завтра в Лондоне?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "weather",
-                        "погода",
-                        "forecast",
-                        "прогноз",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        LONDON_CITY_VARIANTS,
                     ),
-                    LONDON_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Будет ли завтра дождь в Токио?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "rain",
-                        "дождь",
-                        "rainfall",
-                        "weather",
-                        "погода",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "rain",
+                            "дождь",
+                            "rainfall",
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                            "天气",
+                            "天気",
+                            "予報",
+                            "雨",
+                        ),
+                        TOKYO_CITY_VARIANTS,
                     ),
-                    TOKYO_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Какая температура сейчас в Лондоне?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "temperature",
-                        "температура",
-                        "degrees",
-                        "градус",
-                        "weather",
-                        "погода",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "temperature",
+                            "температура",
+                            "degrees",
+                            "градус",
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        LONDON_CITY_VARIANTS,
                     ),
-                    LONDON_CITY_VARIANTS,
-                ),
+                },
             ),
         ],
     ),
@@ -824,30 +965,38 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Что нового в Python?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Что нового в Flutter?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Python?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Что сейчас происходит с Flutter?",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    FLUTTER_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        FLUTTER_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Что нового в ESP-IDF?",
@@ -889,38 +1038,47 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Проверь погоду на завтра в Лондоне.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "weather",
-                        "погода",
-                        "forecast",
-                        "прогноз",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                        ),
+                        LONDON_CITY_VARIANTS,
                     ),
-                    LONDON_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Проверь погоду на завтра в Токио.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "weather",
-                        "погода",
-                        "forecast",
-                        "прогноз",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "weather",
+                            "погода",
+                            "forecast",
+                            "прогноз",
+                            "天气",
+                            "天気",
+                            "予報",
+                        ),
+                        TOKYO_CITY_VARIANTS,
                     ),
-                    TOKYO_CITY_VARIANTS,
-                ),
+                },
             ),
             ToolRouteTest(
                 "Проверь, доступен ли сейчас GitHub.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    (
-                        "GitHub",
-                        "гитхаб",
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        (
+                            "GitHub",
+                            "гитхаб",
+                        ),
                     ),
-                ),
+                },
             ),
             ToolRouteTest(
                 "Поищи информацию о рекурсии.",
@@ -933,9 +1091,11 @@ TEST_GROUPS = [
             ToolRouteTest(
                 "Найди документацию Python.",
                 RouterTool.WEB_SEARCH,
-                expected_query_requirements = (
-                    PYTHON_VARIANTS,
-                ),
+                expected_argument_requirements = {
+                    RouterArgumentName.QUERY: (
+                        PYTHON_VARIANTS,
+                    ),
+                },
             ),
             ToolRouteTest(
                 "Поищи, что такое указатели в C++.",

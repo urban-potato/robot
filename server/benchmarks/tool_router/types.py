@@ -8,6 +8,13 @@ def _empty_arguments() -> dict[str, Any]:
     return {}
 
 
+def _empty_argument_requirements() -> dict[
+    str,
+    tuple[tuple[str, ...], ...],
+]:
+    return {}
+
+
 class OllamaTiming(TypedDict):
     ollama_total: float | None
     load: float | None
@@ -41,10 +48,13 @@ class ToolRouteTest:
         default_factory=_empty_arguments,
     )
 
-    # Each tuple contains alternative words or phrases. The query must
-    # contain at least one alternative from every tuple.
-    expected_query_requirements: tuple[
-        tuple[str, ...],
-        ...,
-    ] = ()
+    # For each argument, each tuple contains alternative words or phrases.
+    # The argument value must contain at least one alternative from
+    # every tuple.
+    expected_argument_requirements: dict[
+        str,
+        tuple[tuple[str, ...], ...],
+    ] = field(
+        default_factory=_empty_argument_requirements,
+    )
     

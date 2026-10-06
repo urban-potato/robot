@@ -10,41 +10,42 @@ USER_CONFIG = UserConfig(
 )
 
 USER_CITY_VARIANTS: tuple[str, ...] = (
-                        USER_CONFIG.city,
-                        "St Petersburg",
-                        "Санкт-Петербург",
-                        "Санкт Петербург",
-                        "Петербург",
-                        "Питер"
+    USER_CONFIG.city,
+    "St Petersburg",
+    "Санкт-Петербург",
+    "Санкт Петербург",
+    "Петербург",
+    "Питер",
 )
 
 TOKYO_CITY_VARIANTS: tuple[str, ...] = (
-                        "Tokyo",
-                        "Токио",
+    "Tokyo",
+    "Токио",
+    "東京",
 )
 
 LONDON_CITY_VARIANTS: tuple[str, ...] = (
-                        "London",
-                        "Лондон",
+    "London",
+    "Лондон",
 )
 
 PYTHON_VARIANTS: tuple[str, ...] = (
-                        "python",
-                        "питон",
-                        "пайтон",
+    "python",
+    "питон",
+    "пайтон",
 )
 
 FLUTTER_VARIANTS: tuple[str, ...] = (
-                        "flutter",
-                        "флаттер",
+    "flutter",
+    "флаттер",
 )
 
 UBUNTU_VARIANTS: tuple[str, ...] = (
-                        "ubuntu",
-                        "убунту",
+    "ubuntu",
+    "убунту",
 )
 
 ANDROID_VARIANTS: tuple[str, ...] = (
-                        "android",
-                        "андроид",
+    "android",
+    "андроид",
 )

@@ -1,6 +1,10 @@
 from typing import Any
 
-from .types import *
+from .types import (
+    RouterArgumentName,
+    RouterField,
+    RouterTool,
+)
 
 
 TOOL_ROUTE_SCHEMA: dict[str, Any] = {
@@ -8,7 +12,10 @@ TOOL_ROUTE_SCHEMA: dict[str, Any] = {
     "properties": {
         RouterField.TOOL: {
             "type": "string",
-            "enum": [tool.value for tool in RouterTool],
+            "enum": [
+                tool.value
+                for tool in RouterTool
+            ],
         },
         RouterField.ARGUMENTS: {
             "type": "object",
@@ -35,6 +42,8 @@ TOOL_ROUTE_SCHEMA: dict[str, Any] = {
             "additionalProperties": False,
         },
     },
-    "required": [RouterField.TOOL],
+    "required": [
+        RouterField.TOOL,
+    ],
     "additionalProperties": False,
 }

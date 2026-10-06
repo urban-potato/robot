@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
 from ai.tool_router.types import (
-    RouterArgumentName,
-    RouterTool,
     ToolRoute,
 )
 from .config import USER_CONFIG
@@ -45,6 +43,7 @@ def _contains_word_stem(
     stem: str,
 ) -> bool:
     pattern = rf"\b{re.escape(stem.casefold())}\w*"
+
     return re.search(
         pattern,
         text.casefold(),
@@ -71,44 +70,70 @@ def _validate_required_arguments(
     return errors
 
 
-def _validate_web_search_query(
+def _validate_argument_requirements(
     test: ToolRouteTest,
     result: ToolRoute,
 ) -> list[str]:
     errors: list[str] = []
 
-    query = result.arguments.get(
-        RouterArgumentName.QUERY,
-    )
+    for argument_name, requirements in (
+        test.expected_argument_requirements.items()
+    ):
+        value = result.arguments.get(argument_name)
 
-    if not isinstance(query, str):
-        errors.append(
-            "web_search query must be a string",
-        )
-        return errors
-
-    if not query.strip():
-        errors.append(
-            "web_search query must not be empty",
-        )
-        return errors
-
-    for alternatives in test.expected_query_requirements:
-        if any(
-            _contains_word_stem(
-                query,
-                alternative,
+        if not isinstance(value, str):
+            errors.append(
+                f"argument {argument_name!r} must be a string "
+                "for requirement validation",
             )
-            for alternative in alternatives
-        ):
             continue
 
-        errors.append(
-            "web_search query does not contain "
-            "any expected value from "
-            f"{alternatives!r}: {query!r}",
+        if not value.strip():
+            errors.append(
+                f"argument {argument_name!r} must not be empty "
+                "for requirement validation",
+            )
+            continue
+
+        for alternatives in requirements:
+            if any(
+                _contains_word_stem(
+                    value,
+                    alternative,
+                )
+                for alternative in alternatives
+            ):
+                continue
+
+            errors.append(
+                f"argument {argument_name!r} does not contain "
+                "any expected value from "
+                f"{alternatives!r}: {value!r}",
+            )
+
+    return errors
+
+
+def _validate_expected_arguments_values(
+        test: ToolRouteTest,
+        result: ToolRoute,
+    ) -> list[str]:
+    errors: list[str] = []
+
+    for argument_name, expected_value in (
+        test.expected_arguments.items()
+    ):
+        actual_value = result.arguments.get(
+            argument_name,
         )
 
+        if actual_value != expected_value:
+            errors.append(
+                "arguments: "
+                f"expected {argument_name!r}="
+                f"{expected_value!r}, "
+                f"got {actual_value!r}",
+            )
     return errors
 
 
@@ -129,40 +154,21 @@ def _validate_tool(
         _validate_required_arguments(result),
     )
 
-    if result.tool == RouterTool.WEB_SEARCH:
-        errors.extend(
-            _validate_web_search_query(
-                test,
-                result,
-            ),
-        )
+    errors.extend(
+        _validate_argument_requirements(
+            test,
+            result,
+        ),
+    )
 
-    for argument_name, expected_value in (
-        test.expected_arguments.items()
-    ):
-        actual_value = result.arguments.get(
-            argument_name,
+    errors.extend(
+        _validate_expected_arguments_values(
+            test, 
+            result
         )
-
-        if actual_value != expected_value:
-            errors.append(
-                "arguments: "
-                f"expected {argument_name!r}="
-                f"{expected_value!r}, "
-                f"got {actual_value!r}",
-            )
+    )
 
     return errors
-
-
-def _validate_result(
-    test: ToolRouteTest,
-    result: ToolRoute,
-) -> list[str]:
-    return _validate_tool(
-        test,
-        result,
-    )
 
 
 def _parse_ollama_timing(
@@ -352,7 +358,7 @@ def run_tests() -> None:
                 captured.getvalue(),
             )
 
-            errors = _validate_result(
+            errors = _validate_tool(
                 test,
                 result,
             )
@@ -571,4 +577,3 @@ def run_tests() -> None:
 
 if __name__ == "__main__":
     run_tests()
-    
