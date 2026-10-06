@@ -23,7 +23,6 @@ class RouterArgumentName:
     CITY = "city"
     COUNTRY_CODE = "country_code"
     TIMEZONE = "timezone"
-    QUESTION = "question"
 
 
 @dataclass(frozen=True)
@@ -113,12 +112,7 @@ class RouterTool(str, Enum):
                 return []
 
             case RouterTool.CLARIFICATION:
-                return [
-                    RouterArgument(
-                        RouterArgumentName.QUESTION,
-                        True,
-                    ),
-                ]
+                return []
 
     def normalize_arguments(
         self,

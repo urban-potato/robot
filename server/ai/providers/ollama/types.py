@@ -21,6 +21,7 @@ class OllamaToolCall:
 @dataclass
 class OllamaOptions:
     temperature: float
+    num_ctx: int
 
 
 @dataclass

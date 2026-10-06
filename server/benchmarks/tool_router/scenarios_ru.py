@@ -802,10 +802,6 @@ TEST_GROUPS = [
                 RouterTool.WEB_SEARCH,
             ),
             ToolRouteTest(
-                "Узнай, сколько сейчас стоит доллар.",
-                RouterTool.WEB_SEARCH,
-            ),
-            ToolRouteTest(
                 "Узнай последние изменения в Python.",
                 RouterTool.WEB_SEARCH,
                 expected_argument_requirements = {
@@ -1037,7 +1033,7 @@ TEST_GROUPS = [
                 RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
-                "Что такое?",
+                "What is?",
                 RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
@@ -1120,8 +1116,22 @@ TEST_GROUPS = [
                 "Поищи, что такое указатели в C++.",
                 RouterTool.WEB_SEARCH,
             ),
+        ],
+    ),
+
+    (
+        "Web search currency",
+        [
             ToolRouteTest(
                 "Узнай, сколько сейчас стоит доллар.",
+                RouterTool.WEB_SEARCH,
+            ),
+            ToolRouteTest(
+                "Сколько стоит доллар к евро?",
+                RouterTool.WEB_SEARCH,
+            ),
+            ToolRouteTest(
+                "Какой курс евро к йенам?",
                 RouterTool.WEB_SEARCH,
             ),
         ],

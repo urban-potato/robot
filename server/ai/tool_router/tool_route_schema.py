@@ -35,9 +35,6 @@ TOOL_ROUTE_SCHEMA: dict[str, Any] = {
                 RouterArgumentName.TIMEZONE: {
                     "type": "string",
                 },
-                RouterArgumentName.QUESTION: {
-                    "type": "string",
-                },
             },
             "additionalProperties": False,
         },

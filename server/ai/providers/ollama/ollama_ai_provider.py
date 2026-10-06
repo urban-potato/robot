@@ -15,9 +15,10 @@ from .ollama_mapper import get_ollama_tools
 
 
 class OllamaAIProvider(AIProvider):
-    def __init__(self, ollama_url: str, model: str):
+    def __init__(self, ollama_url: str, model: str, context: int = 4096):
         self.ollama_url = ollama_url
         self.model = model
+        self.context = context
 
     def _request(
         self,
@@ -43,6 +44,7 @@ class OllamaAIProvider(AIProvider):
             stream=False,
             options=OllamaOptions(
                 temperature=0.2,
+                num_ctx=self.context,
             ),
         )
 

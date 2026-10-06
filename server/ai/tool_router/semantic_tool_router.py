@@ -125,6 +125,7 @@ class SemanticToolRouter:
             "format": TOOL_ROUTE_SCHEMA,
             "options": {
                 "temperature": 0,
+                # "num_ctx": 3072,
             },
         }
 
