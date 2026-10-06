@@ -612,6 +612,13 @@ TEST_GROUPS = [
                 },
             ),
             ToolRouteTest(
+                "Время Лондон Европа",
+                RouterTool.GET_DATETIME,
+                expected_arguments = {
+                    RouterArgumentName.TIMEZONE: "Europe/London",
+                },
+            ),
+            ToolRouteTest(
                 "Сколько сейчас времени в Токио Япония?",
                 RouterTool.GET_DATETIME,
                 expected_arguments = {
@@ -1018,11 +1025,23 @@ TEST_GROUPS = [
                 RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
+                "Проверь, доступен ли сейчас.",
+                RouterTool.CLARIFICATION,
+            ),
+            ToolRouteTest(
                 "Проверь, доступен ли сейчас этот сервис.",
                 RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
                 "Проверь, сколько стоит.",
+                RouterTool.CLARIFICATION,
+            ),
+            ToolRouteTest(
+                "Что такое?",
+                RouterTool.CLARIFICATION,
+            ),
+            ToolRouteTest(
+                "Объясни мне",
                 RouterTool.CLARIFICATION,
             ),
             ToolRouteTest(
