@@ -1,4 +1,6 @@
 
+from typing import Mapping
+
 from .types import ConversationMemoryMessage, ConversationMemoryToolCall, ConversationMemoryToolMessage
 
 
@@ -52,7 +54,7 @@ class ConversationMemory:
         self,
         tool_call_id: str,
         tool_name: str,
-        arguments: dict[str, object],
+        arguments: Mapping[str, object],
     ) -> None:
         self.messages.append(
             ConversationMemoryMessage(

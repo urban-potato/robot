@@ -7,6 +7,7 @@ from uuid import uuid4
 from ai.ai_provider import AIProvider
 from ai.tool_router.semantic_tool_router import SemanticToolRouter
 from conversation_memory.conversation_memory import ConversationMemory
+from ai.tool_router.types import RouterTool
 from tools.executor import ToolExecutionError, execute_tool
 
 
@@ -54,43 +55,34 @@ class RobotServer(BaseHTTPRequestHandler):
                 f"Tool router: {router_elapsed:.3f} s "
                 f"({route})"
             )
-
-            if route.needs_clarification:
-                answer = route.clarification_question
-
-                if answer is None:
-                    raise ValueError(
-                        "Router requested clarification "
-                        "without a clarification question."
-                    )
-            else:
-                if route.tool is not None:
-                    tool_call_id = str(uuid4())
-
-                    self.memory.add_tool_call(
-                        tool_call_id=tool_call_id,
-                        tool_name=route.tool,
-                        arguments=route.arguments,
-                    )
-
-                    try:
-                        tool_result = execute_tool(
-                            route.tool,
-                            route.arguments,
-                        )
-                    except ToolExecutionError as error:
-                        tool_result = str(error)
-
-                    self.memory.add_tool_message(
-                        tool_call_id=tool_call_id,
-                        tool_name=route.tool,
-                        content=tool_result,
-                    )
-
-                answer = self.ai_provider.chat(
-                    self.memory,
-                    tools=None,
+           
+            if route.tool != RouterTool.CLARIFICATION and route.tool != RouterTool.DEFAULT_ASSISTANT:
+                tool_call_id = str(uuid4())
+                
+                self.memory.add_tool_call(
+                    tool_call_id=tool_call_id,
+                    tool_name=route.tool,
+                    arguments=route.arguments,
                 )
+
+                try:
+                    tool_result = execute_tool(
+                        route.tool,
+                        route.arguments,
+                    )
+                except ToolExecutionError as error:
+                    tool_result = str(error)
+
+                self.memory.add_tool_message(
+                    tool_call_id=tool_call_id,
+                    tool_name=route.tool,
+                    content=tool_result,
+                )
+                
+            answer = self.ai_provider.chat(
+                self.memory,
+                tools=None,
+            )
 
             self.memory.add_assistant_message(answer)
 

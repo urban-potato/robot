@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping
 
 from .registry import TOOLS
 
@@ -7,7 +7,7 @@ class ToolExecutionError(Exception):
     pass
 
 
-def execute_tool(name: str, arguments: dict[str, Any]) -> str:
+def execute_tool(name: str, arguments: Mapping[str, Any]) -> str:
     if name not in TOOLS:
         raise ToolExecutionError(
             f"Unknown tool: {name}"

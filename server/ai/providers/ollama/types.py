@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from conversation_memory.conversation_memory import ConversationMemoryMessage, ConversationMemoryToolCall, ConversationMemoryToolMessage
 
@@ -9,7 +9,7 @@ from conversation_memory.conversation_memory import ConversationMemoryMessage, C
 class OllamaFunction:
     index: int
     name: str
-    arguments: dict[str, object]
+    arguments: Mapping[str, object]
 
 
 @dataclass
@@ -125,8 +125,8 @@ class OllamaToolResultMessage:
     def to_dict(self) -> dict[str, Any]:
         return {
             "role": "tool",
-            "content": self.content,
             "tool_name": self.tool_name,
+            "content": self.content,
             # "tool_call_id": self.tool_call_id,
         }
 

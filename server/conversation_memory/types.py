@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Mapping
 
 
 @dataclass
@@ -6,7 +7,7 @@ class ConversationMemoryToolCall:
     id: str
     index: int
     name: str
-    arguments: dict[str, object]
+    arguments: Mapping[str, object]
 
 
 @dataclass
